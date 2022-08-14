@@ -1,9 +1,9 @@
-import FiltersView from "../view/filters-view.js";
-import SortingView from "../view/sorting-view.js";
-import ListView from "../view/list-view.js";
-import PointView from "../view/point-view.js";
-import editFormView from "../view/edit-form-view";
-import { render } from "../render.js";
+import FiltersView from '../view/filters-view.js';
+import SortingView from '../view/sorting-view.js';
+import ListView from '../view/list-view.js';
+import PointView from '../view/point-view.js';
+import editFormView from '../view/edit-form-view';
+import { render } from '../render.js';
 
 export default class PagePresenter {
   listComponent = new ListView();
