@@ -1,24 +1,28 @@
 import FiltersView from '../view/filters-view.js';
 import SortingView from '../view/sorting-view.js';
-import ListView from '../view/list-view.js';
+import ListPointsView from '../view/list-points-view.js';
 import PointView from '../view/point-view.js';
-import editFormView from '../view/edit-form-view';
+import EditPointView from '../view/edit-point-view.js';
 import { render } from '../render.js';
 
 export default class PagePresenter {
-  listComponent = new ListView();
+  listComponent = new ListPointsView();
 
-  init = (filtersContainer, eventsContainer) => {
+  init = (filtersContainer, eventsContainer, pointsModel) => {
     this.filtersContainer = filtersContainer;
     this.eventsContainer = eventsContainer;
+    this.pointsModel = pointsModel;
+    this.listPoints = [...this.pointsModel.getPoints()];
+    
+    // console.log(this.listPoints);
 
     render(new FiltersView(), filtersContainer);
     render(new SortingView(), eventsContainer);
     render(this.listComponent, eventsContainer);
-    render(new editFormView(), this.listComponent.getElement());
+    render(new EditPointView(), this.listComponent.getElement());
 
     for (let i = 0; i < 3; i++) {
-      render(new PointView(), this.listComponent.getElement());
+      render(new PointView(this.listPoints[i]), this.listComponent.getElement());
     }
   };
 }
