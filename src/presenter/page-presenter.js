@@ -17,7 +17,7 @@ export default class PagePresenter {
     render(new FiltersView(), filtersContainer);
     render(new SortingView(), eventsContainer);
     render(this.listComponent, eventsContainer);
-    render(new EditPointView(), this.listComponent.getElement());
+    render(new EditPointView(this.listPoints[1]), this.listComponent.getElement());
 
     for (let i = 0; i < 3; i++) {
       render(

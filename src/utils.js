@@ -13,4 +13,9 @@ const humanizePointDateUI = (date) => dayjs(date).format('MMM D');
 const humanizePointTimeUI = (date) => dayjs(date).format('H:mm');
 const humanizePointDateMarkup = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
 
-export { getRandomInteger, humanizePointDate, humanizePointDateUI, humanizePointTimeUI, humanizePointDateMarkup };
+export {
+  getRandomInteger,
+  humanizePointDate,
+  humanizePointDateUI,
+  humanizePointTimeUI,
+  humanizePointDateMarkup };
