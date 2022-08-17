@@ -13,8 +13,6 @@ export default class PagePresenter {
     this.eventsContainer = eventsContainer;
     this.pointsModel = pointsModel;
     this.listPoints = [...this.pointsModel.getPoints()];
-    
-    // console.log(this.listPoints);
 
     render(new FiltersView(), filtersContainer);
     render(new SortingView(), eventsContainer);
@@ -22,7 +20,10 @@ export default class PagePresenter {
     render(new EditPointView(), this.listComponent.getElement());
 
     for (let i = 0; i < 3; i++) {
-      render(new PointView(this.listPoints[i]), this.listComponent.getElement());
+      render(
+        new PointView(this.listPoints[i]),
+        this.listComponent.getElement()
+      );
     }
   };
 }
