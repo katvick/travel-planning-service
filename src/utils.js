@@ -7,15 +7,12 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-// const humanizePointFromDate = (date) => dayjs(date).format('D MMMM');
-const humanizePointDate = (date) => dayjs(date).format('YYYY-MM-DD');
-const humanizePointDateUI = (date) => dayjs(date).format('MMM D');
-const humanizePointTimeUI = (date) => dayjs(date).format('H:mm');
-const humanizePointDateMarkup = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
+const getRandomElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
+
+const humanizePointDate = (date, format) => dayjs(date).format(format);
 
 export {
   getRandomInteger,
-  humanizePointDate,
-  humanizePointDateUI,
-  humanizePointTimeUI,
-  humanizePointDateMarkup };
+  getRandomElement,
+  humanizePointDate
+};

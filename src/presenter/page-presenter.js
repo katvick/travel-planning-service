@@ -11,19 +11,20 @@ export default class PagePresenter {
   init = (filtersContainer, eventsContainer, pointsModel) => {
     this.filtersContainer = filtersContainer;
     this.eventsContainer = eventsContainer;
+
     this.pointsModel = pointsModel;
     this.listPoints = [...this.pointsModel.getPoints()];
+    this.listDestinations = [...this.pointsModel.getDestinations()];
+    this.listOffers = [...this.pointsModel.getOffers()];
 
     render(new FiltersView(), filtersContainer);
     render(new SortingView(), eventsContainer);
     render(this.listComponent, eventsContainer);
-    render(new EditPointView(this.listPoints[1]), this.listComponent.getElement());
+    render(new EditPointView(this.listPoints[0], this.listDestinations, this.listOffers),this.listComponent.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(
-        new PointView(this.listPoints[i]),
-        this.listComponent.getElement()
-      );
+    for (let i = 0; i < this.listPoints.length; i++) {
+      render(new PointView(this.listPoints[i], this.listOffers, this.listDestinations), this.listComponent.getElement());
     }
+
   };
 }

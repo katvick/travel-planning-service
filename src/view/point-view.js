@@ -1,27 +1,40 @@
 import { createElement } from '../render.js';
 import { humanizePointDate } from '../utils.js';
-import { humanizePointDateUI } from '../utils.js';
-import { humanizePointTimeUI } from '../utils.js';
-import { humanizePointDateMarkup } from '../utils.js';
 
-const createPointTemplate = (point) => {
-  const { basePrice, dateFrom, dateTo, destination, id, offers, type } = point;
+const createOffersTemplate = (offers) => {
+  const offerTemplate = offers.map(({id, title, price}) => `
+  <li class='event__offer' id='${id}'>
+      <span class='event__offer-title'>${title}</span>
+      &plus;&euro;&nbsp;
+      <span class='event__offer-price'>${price}</span>
+  </li>
+  `);
 
-  // рандом даты
-  const pointDate = humanizePointDate(dateFrom);
-  const pointDateUI = humanizePointDateUI(dateFrom);
-  const pointTimeFromUI = humanizePointTimeUI(dateFrom);
-  const pointTimeToUI = humanizePointTimeUI(dateTo);
-  const pointDateFromMarkup = humanizePointDateMarkup(dateFrom);
-  const pointDateToMarkup = humanizePointDateMarkup(dateTo);
+  return offerTemplate.join('');
+};
+
+const createPointTemplate = (point, offers, destinations) => {
+  const { basePrice, dateFrom, dateTo, destination, id, type } = point;
+
+  const offersByType = offers.find((item) => item.type === point.type);
+  const offersSelected = offersByType.offers.filter((item) => point.offers.includes(item.id));
+
+  const destinationByPoint = destinations.find((item) => destination === item.id);
+
+  const pointDateMarkup = humanizePointDate(dateFrom, 'YYYY-MM-DD');
+  const pointDateUI = humanizePointDate(dateFrom, 'MMM D');
+  const pointTimeFromUI = humanizePointDate(dateFrom, 'H:mm');
+  const pointTimeToUI = humanizePointDate(dateTo, 'H:mm');
+  const pointDateFromMarkup = humanizePointDate(dateFrom, 'YYYY-MM-DDTHH:mm');
+  const pointDateToMarkup = humanizePointDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
   return `<li class='trip-events__item' id=${id}>
         <div class='event'>
-            <time class='event__date' datetime=${pointDate}>${pointDateUI}</time>
+            <time class='event__date' datetime=${pointDateMarkup}>${pointDateUI}</time>
             <div class='event__type'>
                 <img class='event__type-icon' width='42' height='42' src='img/icons/${type}.png' alt='Event type icon'>
             </div>
-            <h3 class='event__title'>${type} ${destination.name}</h3>
+            <h3 class='event__title'>${type} ${destinationByPoint.name}</h3>
             <div class='event__schedule'>
                 <p class='event__time'>
                     <time class='event__start-time' datetime=${pointDateFromMarkup}>${pointTimeFromUI}</time>
@@ -34,11 +47,7 @@ const createPointTemplate = (point) => {
             </p>
             <h4 class='visually-hidden'>Offers:</h4>
             <ul class='event__selected-offers'>
-                <li class='event__offer' id=${offers.id}>
-                    <span class='event__offer-title'>${offers.title}</span>
-                    &plus;&euro;&nbsp;
-                    <span class='event__offer-price'>${offers.price}</span>
-                </li>
+              ${createOffersTemplate(offersSelected)}
             </ul>
             <button class='event__rollup-btn' type='button'>
                 <s pan class='visually-hidden'>Open event</s>
@@ -48,12 +57,14 @@ const createPointTemplate = (point) => {
 };
 
 export default class PointView {
-  constructor(point) {
+  constructor(point, offers, destinations) {
     this.point = point;
+    this.offers = offers;
+    this.destinations = destinations;
   }
 
   getTemplate() {
-    return createPointTemplate(this.point);
+    return createPointTemplate(this.point, this.offers, this.destinations);
   }
 
   getElement() {
