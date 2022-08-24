@@ -26,10 +26,10 @@ export default class PagePresenter {
     render(new FiltersView(), this.#filtersContainer);
     render(new SortingView(), this.#eventsContainer);
     render(this.#listComponent, this.#eventsContainer);
-    render(new EditPointView(this.#listPoints[0], this.#listDestinations, this.#listOffers),this.#listComponent.getElement());
+    render(new EditPointView(this.#listPoints[0], this.#listDestinations, this.#listOffers),this.#listComponent.element);
 
     this.#listPoints.forEach((point) => {
-      render(new PointView(point, this.#listOffers, this.#listDestinations), this.#listComponent.getElement());
+      render(new PointView(point, this.#listOffers, this.#listDestinations), this.#listComponent.element);
     });
 
   };
