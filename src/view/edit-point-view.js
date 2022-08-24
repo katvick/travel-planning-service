@@ -29,11 +29,11 @@ const createOffersTemplate = (offers, offersSelected) => {
   return offersTemplate.join('');
 };
 
-const createEditPointTemplate = (point, destinations, offersAll) => {
+const createEditPointTemplate = (point, listOffers, listDestinations) => {
   const { basePrice, dateFrom, dateTo, destination, id, type } = point;
-  const destinationByPoint = destinations.find((item) => destination === item.id);
+  const destinationByPoint = listDestinations.find((item) => destination === item.id);
 
-  const offersByType = offersAll.find((item) => item.type === point.type);
+  const offersByType = listOffers.find((item) => item.type === point.type);
   const offersSelected = offersByType.offers.filter((offer) => point.offers.includes(offer.id));
 
   const dataFromUI = humanizePointDate(dateFrom, 'DD/MM/YY HH:mm');

@@ -13,13 +13,13 @@ const createOffersTemplate = (offers) => {
   return offerTemplate.join('');
 };
 
-const createPointTemplate = (point, offers, destinations) => {
-  const { basePrice, dateFrom, dateTo, destination, id, type } = point;
+const createPointTemplate = (point, listOffers, listDestinations) => {
+  const { basePrice, dateFrom, dateTo, destination, id, type, offers } = point;
 
-  const offersByType = offers.find((item) => item.type === point.type);
-  const offersSelected = offersByType.offers.filter((item) => point.offers.includes(item.id));
+  const offersByType = listOffers.find((item) => item.type === point.type);
+  const offersSelected = offersByType.offers.filter((item) => offers.includes(item.id));
 
-  const destinationByPoint = destinations.find((item) => destination === item.id);
+  const destinationByPoint = listDestinations.find((item) => destination === item.id);
 
   const pointDateMarkup = humanizePointDate(dateFrom, 'YYYY-MM-DD');
   const pointDateUI = humanizePointDate(dateFrom, 'MMM D');

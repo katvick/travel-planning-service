@@ -6,7 +6,7 @@ import EditPointView from '../view/edit-point-view.js';
 import { render } from '../render.js';
 
 export default class PagePresenter {
-  #listComponent = new ListPointsView();
+  #listPointsComponent = new ListPointsView();
   #filtersContainer = null;
   #eventsContainer = null;
   #pointsModel = null;
@@ -14,7 +14,7 @@ export default class PagePresenter {
   #listDestinations = null;
   #listOffers = null;
 
-  init = (filtersContainer, eventsContainer, pointsModel) => {
+  constructor(filtersContainer, eventsContainer, pointsModel) {
     this.#filtersContainer = filtersContainer;
     this.#eventsContainer = eventsContainer;
 
@@ -22,15 +22,56 @@ export default class PagePresenter {
     this.#listPoints = [...this.#pointsModel.points];
     this.#listDestinations = [...this.#pointsModel.destinations];
     this.#listOffers = [...this.#pointsModel.offers];
+  }
 
-    render(new FiltersView(), this.#filtersContainer);
-    render(new SortingView(), this.#eventsContainer);
-    render(this.#listComponent, this.#eventsContainer);
-    render(new EditPointView(this.#listPoints[0], this.#listDestinations, this.#listOffers),this.#listComponent.element);
+  #renderPoint = (point, listOffers, listDestinations) => {
+    const pointComponent = new PointView(point, listOffers, listDestinations);
+    const editPointComponent = new EditPointView(point, listOffers, listDestinations);
 
-    this.#listPoints.forEach((point) => {
-      render(new PointView(point, this.#listOffers, this.#listDestinations), this.#listComponent.element);
+    const replaceItemToForm = () => {
+      this.#listPointsComponent.element.replaceChild(editPointComponent.element, pointComponent.element);
+    };
+
+    const replaceFormToItem = () => {
+      this.#listPointsComponent.element.replaceChild(pointComponent.element, editPointComponent.element);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToItem();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceItemToForm();
+      document.addEventListener('keydown', onEscKeyDown);
     });
 
+    editPointComponent.element.querySelector('form').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceFormToItem();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    editPointComponent.element.querySelector('form').addEventListener('reset', (evt) => {
+      evt.preventDefault();
+      replaceFormToItem();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    render(pointComponent, this.#listPointsComponent.element);
+  };
+
+  init = () => {
+    render(new FiltersView(), this.#filtersContainer);
+    render(new SortingView(), this.#eventsContainer);
+    render(this.#listPointsComponent, this.#eventsContainer);
+    // render(new EditPointView(this.#listPoints[0], this.#listDestinations, this.#listOffers),this.#listPointsComponent.element);
+
+    this.#listPoints.forEach((point) => {
+      this.#renderPoint(point, this.#listOffers, this.#listDestinations);
+    });
   };
 }
