@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { humanizePointDate } from '../utils.js';
+import { humanizePointDate } from '../utils/utils.js';
 
 const createOffersTemplate = (offers) => {
   const offerTemplate = offers.map(({id, title, price}) => `
@@ -13,13 +13,13 @@ const createOffersTemplate = (offers) => {
   return offerTemplate.join('');
 };
 
-const createPointTemplate = (point, offers, destinations) => {
-  const { basePrice, dateFrom, dateTo, destination, id, type } = point;
+const createPointTemplate = (point, listOffers, listDestinations) => {
+  const { basePrice, dateFrom, dateTo, destination, id, type, offers } = point;
 
-  const offersByType = offers.find((item) => item.type === point.type);
-  const offersSelected = offersByType.offers.filter((item) => point.offers.includes(item.id));
+  const offersByType = listOffers.find((item) => item.type === point.type);
+  const offersSelected = offersByType.offers.filter((item) => offers.includes(item.id));
 
-  const destinationByPoint = destinations.find((item) => destination === item.id);
+  const destinationByPoint = listDestinations.find((item) => destination === item.id);
 
   const pointDateMarkup = humanizePointDate(dateFrom, 'YYYY-MM-DD');
   const pointDateUI = humanizePointDate(dateFrom, 'MMM D');
@@ -57,25 +57,27 @@ const createPointTemplate = (point, offers, destinations) => {
 };
 
 export default class PointView {
+  #element = null;
+
   constructor(point, offers, destinations) {
     this.point = point;
     this.offers = offers;
     this.destinations = destinations;
   }
 
-  getTemplate() {
+  get template() {
     return createPointTemplate(this.point, this.offers, this.destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

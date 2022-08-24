@@ -1,4 +1,4 @@
-export const OFFERS = [
+export const offers = [
   {
     type: 'taxi',
     offers: [

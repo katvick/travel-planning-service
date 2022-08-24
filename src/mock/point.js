@@ -1,6 +1,6 @@
-import { getRandomInteger } from '../utils.js';
-import { getRandomElement } from '../utils.js';
-import { DESTINATIOS } from './destinations.js';
+import { getRandomInteger } from '../utils/utils-for-mock';
+import { getRandomElement } from '../utils/utils-for-mock';
+import { destinations } from './destinations.js';
 
 const generateType = () => {
   const types = [
@@ -22,16 +22,14 @@ const generateType = () => {
 
 export const generatePoint = () => {
   const typePoint = generateType();
-  // const offersPoint = OFFERS.find((item) => item.type === typePoint);
-  // const offersId = offersPoint.offers.map((offer) => offer.id);
 
   return {
     basePrice: getRandomInteger(300, 1000),
     dateFrom: '2019-07-10T22:55:56.845Z',
     dateTo: '2019-07-11T11:22:13.375Z',
-    destination: getRandomElement(DESTINATIOS).id,
+    destination: getRandomElement(destinations).id,
     id: getRandomInteger(1, 100),
     type: typePoint,
-    offers: [1, 3],
+    offers: [getRandomInteger(1, 3), getRandomInteger(1, 3)],
   };
 };

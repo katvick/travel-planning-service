@@ -4,10 +4,10 @@ import PointsModel from './model/points-model.js';
 
 const filtersElement = document.querySelector('.trip-controls__filters');
 const eventsElement = document.querySelector('.trip-events');
-const pagePresenter = new PagePresenter();
-const pointsModel = new PointsModel;
+const pointsModel = new PointsModel();
+const pagePresenter = new PagePresenter(filtersElement, eventsElement, pointsModel);
 
 // console.log(pointsModel);
 
-pagePresenter.init(filtersElement, eventsElement, pointsModel);
+pagePresenter.init();
 
