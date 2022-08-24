@@ -1,4 +1,4 @@
-export const DESTINATIOS = [
+export const destinations = [
   {
     id: 1,
     description: 'Amsterdam, is a lorem ipsum dolor sit amet, consectetur adipiscing elit.',

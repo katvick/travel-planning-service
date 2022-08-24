@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { humanizePointDate } from '../utils.js';
+import { humanizePointDate } from '../utils/utils.js';
 
 const createPicturesTemplate = (pictures) => {
   const picturesTemplate = pictures.map(
@@ -11,11 +11,12 @@ const createPicturesTemplate = (pictures) => {
   return picturesTemplate.join('');
 };
 
-const createOffersTemplate = (offers) => {
+const createOffersTemplate = (offers, offersSelected) => {
   const offersTemplate = offers.offers.map(
-    ({ title, price }) => `
+    ({ id, title, price }) => `
     <div class='event__offer-selector'>
-      <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-1' type='checkbox' name='event-offer-${title}'>
+      <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-1' type='checkbox' name='event-offer-${title}' 
+      ${offersSelected.find((item) => item.id === id) ? 'checked' : ''}>
       <label class='event__offer-label' for='event-offer-${title}-1'>
         <span class='event__offer-title'>${title}</span>
         &plus;&euro;&nbsp;
@@ -33,7 +34,7 @@ const createEditPointTemplate = (point, destinations, offersAll) => {
   const destinationByPoint = destinations.find((item) => destination === item.id);
 
   const offersByType = offersAll.find((item) => item.type === point.type);
-  // const offersSelected = offersByType.offers.filter(({id}) => point.offers.includes(id));
+  const offersSelected = offersByType.offers.filter((offer) => point.offers.includes(offer.id));
 
   const dataFromUI = humanizePointDate(dateFrom, 'DD/MM/YY HH:mm');
   const dataToUI = humanizePointDate(dateTo, 'DD/MM/YY HH:mm');
@@ -135,7 +136,7 @@ const createEditPointTemplate = (point, destinations, offersAll) => {
       <section class='event__section  event__section--offers'>
         <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
         <div class='event__available-offers'>
-          ${createOffersTemplate(offersByType)}
+          ${createOffersTemplate(offersByType, offersSelected)}
         </div>
       </section>
 

@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { humanizePointDate } from '../utils.js';
+import { humanizePointDate } from '../utils/utils.js';
 
 const createOffersTemplate = (offers) => {
   const offerTemplate = offers.map(({id, title, price}) => `

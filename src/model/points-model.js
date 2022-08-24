@@ -1,15 +1,24 @@
 import { generatePoint } from '../mock/point.js';
-import { DESTINATIOS } from '../mock/destinations.js';
-import { OFFERS } from '../mock/offers.js';
+import { destinations } from '../mock/destinations.js';
+import { offers } from '../mock/offers.js';
 
 export default class PointsModel {
-  _points = Array.from({ length: 3 }, generatePoint);
-  _destinations = DESTINATIOS;
-  _offers = OFFERS;
+  #points = Array.from({ length: 3 }, generatePoint);
+  #destinations = destinations;
+  #offers = offers;
 
-  getPoints = () => this._points;
-  getDestinations = () => this._destinations;
-  getOffers = () => this._offers;
+  get points() {
+    return this.#points;
+  }
+
+  get destinations() {
+    return this.#destinations;
+  }
+
+  get offers() {
+    return this.#offers;
+  }
+
 }
 
 
