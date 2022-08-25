@@ -3,6 +3,7 @@ import SortingView from '../view/sorting-view.js';
 import ListPointsView from '../view/list-points-view.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
+import NoPointsView from '../view/no-points-view.js';
 import { render } from '../render.js';
 
 export default class PagePresenter {
@@ -17,11 +18,7 @@ export default class PagePresenter {
   constructor(filtersContainer, eventsContainer, pointsModel) {
     this.#filtersContainer = filtersContainer;
     this.#eventsContainer = eventsContainer;
-
     this.#pointsModel = pointsModel;
-    this.#listPoints = [...this.#pointsModel.points];
-    this.#listDestinations = [...this.#pointsModel.destinations];
-    this.#listOffers = [...this.#pointsModel.offers];
   }
 
   #renderPoint = (point, listOffers, listDestinations) => {
@@ -64,14 +61,26 @@ export default class PagePresenter {
     render(pointComponent, this.#listPointsComponent.element);
   };
 
-  init = () => {
-    render(new FiltersView(), this.#filtersContainer);
-    render(new SortingView(), this.#eventsContainer);
-    render(this.#listPointsComponent, this.#eventsContainer);
-    // render(new EditPointView(this.#listPoints[0], this.#listDestinations, this.#listOffers),this.#listPointsComponent.element);
+  #renderBoard = () => {
+    if (this.#listPoints.every((point) => point.isArchive)) {
+      render(new NoPointsView(), this.#eventsContainer);
+    } else {
+      render(new FiltersView(), this.#filtersContainer);
+      render(new SortingView(), this.#eventsContainer);
+      render(this.#listPointsComponent, this.#eventsContainer);
 
-    this.#listPoints.forEach((point) => {
-      this.#renderPoint(point, this.#listOffers, this.#listDestinations);
-    });
+      this.#listPoints.forEach((point) => {
+        this.#renderPoint(point, this.#listOffers, this.#listDestinations);
+      });
+    }
+  };
+
+  init = () => {
+    this.#listPoints = [...this.#pointsModel.points];
+    this.#listDestinations = [...this.#pointsModel.destinations];
+    this.#listOffers = [...this.#pointsModel.offers];
+
+    this.#renderBoard();
   };
 }
+
