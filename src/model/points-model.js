@@ -3,7 +3,7 @@ import { destinations } from '../mock/destinations.js';
 import { offers } from '../mock/offers.js';
 
 export default class PointsModel {
-  #points = Array.from({ length: 0 }, generatePoint);
+  #points = Array.from({ length: 5 }, generatePoint);
   #destinations = destinations;
   #offers = offers;
 

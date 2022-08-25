@@ -18,11 +18,7 @@ export default class PagePresenter {
   constructor(filtersContainer, eventsContainer, pointsModel) {
     this.#filtersContainer = filtersContainer;
     this.#eventsContainer = eventsContainer;
-
     this.#pointsModel = pointsModel;
-    this.#listPoints = [...this.#pointsModel.points];
-    this.#listDestinations = [...this.#pointsModel.destinations];
-    this.#listOffers = [...this.#pointsModel.offers];
   }
 
   #renderPoint = (point, listOffers, listDestinations) => {
@@ -65,7 +61,7 @@ export default class PagePresenter {
     render(pointComponent, this.#listPointsComponent.element);
   };
 
-  init = () => {
+  #renderBoard = () => {
     if (this.#listPoints.every((point) => point.isArchive)) {
       render(new NoPointsView(), this.#eventsContainer);
     } else {
@@ -78,4 +74,13 @@ export default class PagePresenter {
       });
     }
   };
+
+  init = () => {
+    this.#listPoints = [...this.#pointsModel.points];
+    this.#listDestinations = [...this.#pointsModel.destinations];
+    this.#listOffers = [...this.#pointsModel.offers];
+
+    this.#renderBoard();
+  };
 }
+
