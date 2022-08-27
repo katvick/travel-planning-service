@@ -4,9 +4,9 @@ import ListPointsView from '../view/list-points-view.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import NoPointsView from '../view/no-points-view.js';
-import { render } from '../render.js';
+import { render } from '../framework/render';
 
-export default class PagePresenter {
+export default class BoardPresenter {
   #listPointsComponent = new ListPointsView();
   #filtersContainer = null;
   #eventsContainer = null;
