@@ -41,19 +41,17 @@ export default class BoardPresenter {
       }
     };
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEditClickHandler(() => {
       replaceItemToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    editPointComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    editPointComponent.setSaveClickHandler(() => {
       replaceFormToItem();
       document.removeEventListener('keydown', onEscKeyDown);
     });
 
-    editPointComponent.element.querySelector('form').addEventListener('reset', (evt) => {
-      evt.preventDefault();
+    editPointComponent.setCancelClickHandler(() => {
       replaceFormToItem();
       document.removeEventListener('keydown', onEscKeyDown);
     });
