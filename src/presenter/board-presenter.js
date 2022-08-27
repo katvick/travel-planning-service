@@ -4,7 +4,7 @@ import ListPointsView from '../view/list-points-view.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import NoPointsView from '../view/no-points-view.js';
-import { render } from '../framework/render';
+import { render, replace } from '../framework/render';
 
 export default class BoardPresenter {
   #listPointsComponent = new ListPointsView();
@@ -26,11 +26,11 @@ export default class BoardPresenter {
     const editPointComponent = new EditPointView(point, listOffers, listDestinations);
 
     const replaceItemToForm = () => {
-      this.#listPointsComponent.element.replaceChild(editPointComponent.element, pointComponent.element);
+      replace(editPointComponent, pointComponent);
     };
 
     const replaceFormToItem = () => {
-      this.#listPointsComponent.element.replaceChild(pointComponent.element, editPointComponent.element);
+      replace(pointComponent, editPointComponent);
     };
 
     const onEscKeyDown = (evt) => {
