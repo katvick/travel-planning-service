@@ -12,7 +12,5 @@ const filters = generateFilter(pointsModel.points);
 
 render(new FiltersView(filters), filtersElement);
 
-console.log(filters);
-
 pagePresenter.init();
 
