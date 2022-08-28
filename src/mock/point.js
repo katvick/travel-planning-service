@@ -25,8 +25,8 @@ export const generatePoint = () => {
 
   return {
     basePrice: getRandomInteger(300, 1000),
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: `2022-08-${getRandomInteger(26, 29)}T${getRandomInteger(10, 15)}:55:56.845Z`,
+    dateTo: `2022-08-${getRandomInteger(29, 31)}T${getRandomInteger(16, 23)}:22:13.375Z`,
     destination: getRandomElement(destinations).id,
     id: getRandomInteger(1, 100),
     type: typePoint,
