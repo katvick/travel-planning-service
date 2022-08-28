@@ -1,5 +1,15 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDate } from '../utils/utils.js';
+
+const BLANK_POINT = {
+  basePrice: null,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  id: null,
+  type: null,
+  offers: [0],
+};
 
 const createPicturesTemplate = (pictures) => {
   const picturesTemplate = pictures.map(
@@ -155,10 +165,9 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
 </li>`;
 };
 
-export default class EditPointView {
-  #element = null;
-
-  constructor(point, destinations, offers) {
+export default class EditPointView extends AbstractView {
+  constructor(point = BLANK_POINT, destinations, offers) {
+    super();
     this.point = point;
     this.destinations = destinations;
     this.offers = offers;
@@ -168,15 +177,23 @@ export default class EditPointView {
     return createEditPointTemplate(this.point, this.destinations, this.offers);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setSaveClickHandler = (callback) => {
+    this._callback.saveClick = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#saveClickHandler);
+  };
 
-    return this.#element;
-  }
+  setCancelClickHandler = (callback) => {
+    this._callback.cancelClick = callback;
+    this.element.querySelector('form').addEventListener('reset', this.#cancelClickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #saveClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.saveClick();
+  };
+
+  #cancelClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.cancelClick();
+  };
 }
