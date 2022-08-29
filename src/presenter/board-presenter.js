@@ -1,4 +1,3 @@
-import FiltersView from '../view/filters-view.js';
 import SortingView from '../view/sorting-view.js';
 import ListPointsView from '../view/list-points-view.js';
 import PointView from '../view/point-view.js';
@@ -8,15 +7,13 @@ import { render, replace } from '../framework/render';
 
 export default class BoardPresenter {
   #listPointsComponent = new ListPointsView();
-  #filtersContainer = null;
   #eventsContainer = null;
   #pointsModel = null;
   #listPoints = null;
   #listDestinations = null;
   #listOffers = null;
 
-  constructor(filtersContainer, eventsContainer, pointsModel) {
-    this.#filtersContainer = filtersContainer;
+  constructor(eventsContainer, pointsModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointsModel = pointsModel;
   }
@@ -63,7 +60,6 @@ export default class BoardPresenter {
     if (this.#listPoints.every((point) => point.isArchive)) {
       render(new NoPointsView(), this.#eventsContainer);
     } else {
-      render(new FiltersView(), this.#filtersContainer);
       render(new SortingView(), this.#eventsContainer);
       render(this.#listPointsComponent, this.#eventsContainer);
 
