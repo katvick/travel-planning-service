@@ -1,5 +1,5 @@
-import { FilterType } from '../const';
-import { isPointsFuture } from './utils';
+import { FilterType } from '../const.js';
+import { isPointsFuture } from './utils.js';
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,
