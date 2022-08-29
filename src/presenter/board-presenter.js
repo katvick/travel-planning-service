@@ -18,6 +18,10 @@ export default class BoardPresenter {
     this.#pointsModel = pointsModel;
   }
 
+  #renderSort = () => {
+    render(new SortingView(), this.#eventsContainer);
+  };
+
   #renderPoint = (point, listOffers, listDestinations) => {
     const pointComponent = new PointView(point, listOffers, listDestinations);
     const editPointComponent = new EditPointView(point, listOffers, listDestinations);
@@ -56,17 +60,29 @@ export default class BoardPresenter {
     render(pointComponent, this.#listPointsComponent.element);
   };
 
+  #renderPoints = () => {
+    this.#listPoints.forEach((point) => {
+      this.#renderPoint(point, this.#listOffers, this.#listDestinations);
+    });
+  };
+
+  #renderNoPoints = () => {
+    render(new NoPointsView(), this.#eventsContainer);
+  };
+
+  #renderListPoints = () => {
+    render(this.#listPointsComponent, this.#eventsContainer);
+    this.#renderPoints();
+  };
+
   #renderBoard = () => {
     if (this.#listPoints.every((point) => point.isArchive)) {
-      render(new NoPointsView(), this.#eventsContainer);
-    } else {
-      render(new SortingView(), this.#eventsContainer);
-      render(this.#listPointsComponent, this.#eventsContainer);
-
-      this.#listPoints.forEach((point) => {
-        this.#renderPoint(point, this.#listOffers, this.#listDestinations);
-      });
+      this.#renderNoPoints();
+      return;
     }
+
+    this.#renderSort();
+    this.#renderListPoints();
   };
 
   init = () => {
