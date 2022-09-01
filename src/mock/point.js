@@ -1,5 +1,4 @@
-import { getRandomInteger } from '../utils/utils-for-mock';
-import { getRandomElement } from '../utils/utils-for-mock';
+import { getRandomInteger, getRandomElement } from '../utils/utils-for-mock';
 import { destinations } from './destinations.js';
 
 const generateType = () => {
