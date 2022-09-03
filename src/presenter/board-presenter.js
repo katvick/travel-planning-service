@@ -3,6 +3,7 @@ import ListPointsView from '../view/list-points-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import PointPresenter from './point-presenter.js';
 import { render } from '../framework/render.js';
+import { updatePoint } from '../utils/common.js';
 
 export default class BoardPresenter {
   #listPointsComponent = new ListPointsView();
@@ -12,6 +13,7 @@ export default class BoardPresenter {
   #listDestinations = null;
   #listOffers = null;
 
+  #points = [];
   #pointPresenter = new Map();
 
   constructor(eventsContainer, pointsModel) {
@@ -27,13 +29,18 @@ export default class BoardPresenter {
     this.#renderBoard();
   };
 
+  #hundlePointChange = (updatedPoint) => {
+    this.#points = updatePoint(this.#points, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#listOffers, this.#listDestinations);
+  };
+
   #renderSort = () => {
     render(new SortingView(), this.#eventsContainer);
   };
 
-  #renderPoint = (point, listOffers, listDestinations) => {
+  #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#listPointsComponent.element);
-    pointPresenter.init(point, listOffers, listDestinations);
+    pointPresenter.init(point, this.#listOffers, this.#listDestinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
