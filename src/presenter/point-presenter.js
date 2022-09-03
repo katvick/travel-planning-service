@@ -1,6 +1,6 @@
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
-import { render, replace } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 
 
 export default class PointPresenter {
@@ -22,6 +22,9 @@ export default class PointPresenter {
     this.#listOffers = listOffers;
     this.#listDestinations = listDestinations;
 
+    const prevPointComponent = this.#pointComponent;
+    const prevEditPointComponent = this.#editPointComponent;
+
     this.#pointComponent = new PointView(this.#point, this.#listOffers, this.#listDestinations);
     this.#editPointComponent = new EditPointView(this.#point, this.#listOffers, this.#listDestinations);
 
@@ -29,7 +32,27 @@ export default class PointPresenter {
     this.#editPointComponent.setSaveClickHandler(this.#hundlePointSubmit);
     this.#editPointComponent.setCancelClickHandler(this.#hundleCancelEditPointClick);
 
-    render(this.#pointComponent, this.#listPointsContainer);
+    if (prevPointComponent === null || prevEditPointComponent === null) {
+      render(this.#pointComponent, this.#listPointsContainer);
+      return;
+    }
+
+    if (this.#listPointsContainer.contains(prevPointComponent.element)) {
+      replace(this.#pointComponent, prevPointComponent);
+    }
+
+    if (this.#editPointComponent.contains(prevEditPointComponent.element)) {
+      replace(this.#editPointComponent, prevEditPointComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevEditPointComponent);
+
+  };
+
+  destroy = () => {
+    remove(this.#pointComponent);
+    remove(this.#editPointComponent);
   };
 
   #replaceItemToForm = () => {
