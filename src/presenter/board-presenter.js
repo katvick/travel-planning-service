@@ -12,6 +12,8 @@ export default class BoardPresenter {
   #listDestinations = null;
   #listOffers = null;
 
+  #pointPresenter = new Map();
+
   constructor(eventsContainer, pointsModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointsModel = pointsModel;
@@ -32,6 +34,7 @@ export default class BoardPresenter {
   #renderPoint = (point, listOffers, listDestinations) => {
     const pointPresenter = new PointPresenter(this.#listPointsComponent.element);
     pointPresenter.init(point, listOffers, listDestinations);
+    this.#pointPresenter.set(point.id, pointPresenter);
   };
 
   #renderPoints = () => {
@@ -47,6 +50,11 @@ export default class BoardPresenter {
   #renderListPoints = () => {
     render(this.#listPointsComponent, this.#eventsContainer);
     this.#renderPoints();
+  };
+
+  #clearListPoints = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   };
 
   #renderBoard = () => {

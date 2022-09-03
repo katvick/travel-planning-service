@@ -1,4 +1,5 @@
 import { getRandomInteger, getRandomElement } from '../utils/utils-for-mock';
+import { nanoid } from 'nanoid';
 import { destinations } from './destinations.js';
 
 const generateType = () => {
@@ -27,7 +28,7 @@ export const generatePoint = () => {
     dateFrom: `2022-08-${getRandomInteger(26, 29)}T${getRandomInteger(10, 15)}:55:56.845Z`,
     dateTo: `2022-08-${getRandomInteger(29, 31)}T${getRandomInteger(16, 23)}:22:13.375Z`,
     destination: getRandomElement(destinations).id,
-    id: getRandomInteger(1, 100),
+    id: nanoid(),
     type: typePoint,
     offers: [getRandomInteger(1, 3), getRandomInteger(1, 3)],
   };

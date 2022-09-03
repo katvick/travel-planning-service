@@ -2,7 +2,6 @@ import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { render, replace, remove } from '../framework/render.js';
 
-
 export default class PointPresenter {
   #point = null;
   #listOffers = null;
