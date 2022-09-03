@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomElement } from '../utils/utils-for-mock';
+import { getRandomInteger, getRandomElement } from '../utils/common';
 import { nanoid } from 'nanoid';
 import { destinations } from './destinations.js';
 

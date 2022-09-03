@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizePointDate } from '../utils/utils.js';
+import { humanizePointDate } from '../utils/point.js';
 
 const BLANK_POINT = {
   basePrice: null,
