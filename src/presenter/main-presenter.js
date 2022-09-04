@@ -7,6 +7,7 @@ import { updatePoint } from '../utils/common.js';
 
 export default class MainPresenter {
   #listPointsComponent = new ListPointsView();
+  #sortComponent = new SortingView();
   #eventsContainer = null;
   #pointsModel = null;
   #listPoints = null;
@@ -38,8 +39,13 @@ export default class MainPresenter {
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#listOffers, this.#listDestinations);
   };
 
+  #hundleSortTypeChange = (sortType) => {
+
+  };
+
   #renderSort = () => {
-    render(new SortingView(), this.#eventsContainer);
+    render(this.#sortComponent, this.#eventsContainer);
+    this.#sortComponent.setSortTypeChangeHundler(this.#hundleSortTypeChange);
   };
 
   #renderPoint = (point) => {
