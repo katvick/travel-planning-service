@@ -8,12 +8,14 @@ export default class PointPresenter {
   #listDestinations = null;
 
   #listPointsContainer = null;
+  #changeData = null;
 
   #pointComponent = null;
   #editPointComponent = null;
 
-  constructor (listPointsContainer) {
+  constructor (listPointsContainer, changeData) {
     this.#listPointsContainer = listPointsContainer;
+    this.#changeData = changeData;
   }
 
   init = (point, listOffers, listDestinations) => {
@@ -83,7 +85,8 @@ export default class PointPresenter {
     this.#addEscEventListener();
   };
 
-  #hundlePointSubmit = () => {
+  #hundlePointSubmit = (point) => {
+    this.#changeData(point);
     this.#replaceFormToItem();
     this.#removeEscEventListener();
   };

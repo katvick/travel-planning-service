@@ -5,7 +5,7 @@ import PointPresenter from './point-presenter.js';
 import { render } from '../framework/render.js';
 import { updatePoint } from '../utils/common.js';
 
-export default class BoardPresenter {
+export default class MainPresenter {
   #listPointsComponent = new ListPointsView();
   #eventsContainer = null;
   #pointsModel = null;
@@ -26,7 +26,7 @@ export default class BoardPresenter {
     this.#listDestinations = [...this.#pointsModel.destinations];
     this.#listOffers = [...this.#pointsModel.offers];
 
-    this.#renderBoard();
+    this.#renderPage();
   };
 
   #hundlePointChange = (updatedPoint) => {
@@ -39,7 +39,7 @@ export default class BoardPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#listPointsComponent.element);
+    const pointPresenter = new PointPresenter(this.#listPointsComponent.element, this.#hundlePointChange);
     pointPresenter.init(point, this.#listOffers, this.#listDestinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
@@ -64,7 +64,7 @@ export default class BoardPresenter {
     this.#pointPresenter.clear();
   };
 
-  #renderBoard = () => {
+  #renderPage = () => {
     if (this.#listPoints.every((point) => point.isArchive)) {
       this.#renderNoPoints();
       return;
