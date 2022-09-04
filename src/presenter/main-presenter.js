@@ -29,6 +29,10 @@ export default class MainPresenter {
     this.#renderPage();
   };
 
+  #hundleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
   #hundlePointChange = (updatedPoint) => {
     this.#points = updatePoint(this.#points, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#listOffers, this.#listDestinations);
@@ -39,7 +43,7 @@ export default class MainPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#listPointsComponent.element, this.#hundlePointChange);
+    const pointPresenter = new PointPresenter(this.#listPointsComponent.element, this.#hundlePointChange, this.#hundleModeChange);
     pointPresenter.init(point, this.#listOffers, this.#listDestinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
