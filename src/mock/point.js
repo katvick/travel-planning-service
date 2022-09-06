@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomElement } from '../utils/common';
+import { getRandomInteger, getRandomElement } from '../utils/common.js';
 import { nanoid } from 'nanoid';
 import { destinations } from './destinations.js';
 

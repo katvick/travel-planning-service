@@ -41,7 +41,7 @@ export default class SortingView extends AbstractView {
   };
 
   #sortTypeChangeHundler = (evt) => {
-    if (evt.target.tagName !== 'INPUT') {
+    if (evt.target.tagName !== 'input') {
       return;
     }
 
