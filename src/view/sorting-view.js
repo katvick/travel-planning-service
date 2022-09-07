@@ -35,13 +35,13 @@ export default class SortingView extends AbstractView {
     return createSortingTemplate();
   }
 
-  setSortTypeChangeHundler = (callback) => {
+  setSortTypeChangeHandler = (callback) => {
     this._callback.sortTypeChange = callback;
-    this.element.addEventListener('click', this.#sortTypeChangeHundler);
+    this.element.addEventListener('click', this.#sortTypeChangeHandler);
   };
 
-  #sortTypeChangeHundler = (evt) => {
-    if (evt.target.tagName !== 'input') {
+  #sortTypeChangeHandler = (evt) => {
+    if (evt.target.tagName !== 'INPUT') {
       return;
     }
 

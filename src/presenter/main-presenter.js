@@ -35,11 +35,11 @@ export default class MainPresenter {
     this.#renderPage();
   };
 
-  #hundleModeChange = () => {
+  #handleModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #hundlePointChange = (updatedPoint) => {
+  #handlePointChange = (updatedPoint) => {
     this.#listPoints = updatePoint(this.#listPoints, updatedPoint);
     this.#sourcedPagePoints = updatePoint(this.#sourcedPagePoints, updatePoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#listOffers, this.#listDestinations);
@@ -60,25 +60,23 @@ export default class MainPresenter {
     this.#currentSortType = sortType;
   };
 
-  #hundleSortTypeChange = (sortType) => {
-    // Сортируем задачи
+  #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
 
     this.#sortPoints(sortType);
-
-    // Очищаем список
-    // Рендерим список заново
+    this.#clearListPoints();
+    this.#renderListPoints();
   };
 
   #renderSort = () => {
     render(this.#sortComponent, this.#eventsContainer);
-    this.#sortComponent.setSortTypeChangeHundler(this.#hundleSortTypeChange);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#listPointsComponent.element, this.#hundlePointChange, this.#hundleModeChange);
+    const pointPresenter = new PointPresenter(this.#listPointsComponent.element, this.#handlePointChange, this.#handleModeChange);
     pointPresenter.init(point, this.#listOffers, this.#listDestinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
