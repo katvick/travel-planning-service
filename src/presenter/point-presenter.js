@@ -37,9 +37,9 @@ export default class PointPresenter {
     this.#pointComponent = new PointView(this.#point, this.#listOffers, this.#listDestinations);
     this.#editPointComponent = new EditPointView(this.#point, this.#listOffers, this.#listDestinations);
 
-    this.#pointComponent.setEditClickHandler(this.#hundleEditPointClick);
-    this.#editPointComponent.setSaveClickHandler(this.#hundlePointSubmit);
-    this.#editPointComponent.setCancelClickHandler(this.#hundleCancelEditPointClick);
+    this.#pointComponent.setEditClickHandler(this.#handleEditPointClick);
+    this.#editPointComponent.setSaveClickHandler(this.#handlePointSubmit);
+    this.#editPointComponent.setCancelClickHandler(this.#handleCancelEditPointClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
       render(this.#pointComponent, this.#listPointsContainer);
@@ -97,18 +97,18 @@ export default class PointPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
 
-  #hundleEditPointClick = () => {
+  #handleEditPointClick = () => {
     this.#replaceItemToForm();
     this.#addEscEventListener();
   };
 
-  #hundlePointSubmit = (point) => {
-    this.#changeData(point);
+  #handlePointSubmit = () => {
+    this.#changeData(this.#point);
     this.#replaceFormToItem();
     this.#removeEscEventListener();
   };
 
-  #hundleCancelEditPointClick = () => {
+  #handleCancelEditPointClick = () => {
     this.#replaceFormToItem();
     this.#removeEscEventListener();
   };
