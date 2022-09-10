@@ -1,4 +1,4 @@
-import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate } from '../utils/point.js';
 
 const BLANK_POINT = {
@@ -174,6 +174,8 @@ export default class EditPointView extends AbstractStatefulView {
     this._state = EditPointView.parsePointToState(point);
     this.#destinations = destinations;
     this.#offers = offers;
+
+    this.#setInnerHandlers();
   }
 
   get template() {
@@ -183,6 +185,12 @@ export default class EditPointView extends AbstractStatefulView {
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setCancelClickHandler();
   };
 
   #formSubmitHandler = (evt) => {
@@ -198,6 +206,10 @@ export default class EditPointView extends AbstractStatefulView {
   #cancelClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.cancelClick();
+  };
+
+  #setInnerHandlers = () => {
+
   };
 
   static parsePointToState = (point) => ({...point});
