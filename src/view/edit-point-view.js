@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { humanizePointDate } from '../utils/point.js';
 
 const BLANK_POINT = {
@@ -165,21 +165,29 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
 </li>`;
 };
 
-export default class EditPointView extends AbstractView {
+export default class EditPointView extends AbstractStatefulView {
+  #destinations = null;
+  #offers = null;
+
   constructor(point = BLANK_POINT, destinations, offers) {
     super();
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+    this._state = EditPointView.parsePointToState(point);
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
   get template() {
-    return createEditPointTemplate(this.point, this.destinations, this.offers);
+    return createEditPointTemplate(this._state, this.#destinations, this.#offers);
   }
 
-  setSaveClickHandler = (callback) => {
-    this._callback.saveClick = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#saveClickHandler);
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit(EditPointView.parseStateToPoint(this._state));
   };
 
   setCancelClickHandler = (callback) => {
@@ -187,13 +195,12 @@ export default class EditPointView extends AbstractView {
     this.element.querySelector('form').addEventListener('reset', this.#cancelClickHandler);
   };
 
-  #saveClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.saveClick();
-  };
-
   #cancelClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.cancelClick();
   };
+
+  static parsePointToState = (point) => ({...point});
+
+  static parseStateToPoint = (state) => ({...state});
 }

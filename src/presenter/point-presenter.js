@@ -38,7 +38,7 @@ export default class PointPresenter {
     this.#editPointComponent = new EditPointView(this.#point, this.#listOffers, this.#listDestinations);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditPointClick);
-    this.#editPointComponent.setSaveClickHandler(this.#handlePointSubmit);
+    this.#editPointComponent.setFormSubmitHandler(this.#handlePointSubmit);
     this.#editPointComponent.setCancelClickHandler(this.#handleCancelEditPointClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
@@ -102,8 +102,8 @@ export default class PointPresenter {
     this.#addEscEventListener();
   };
 
-  #handlePointSubmit = () => {
-    this.#changeData(this.#point);
+  #handlePointSubmit = (point) => {
+    this.#changeData(point);
     this.#replaceFormToItem();
     this.#removeEscEventListener();
   };
