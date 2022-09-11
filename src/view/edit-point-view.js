@@ -145,6 +145,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#offers = offers;
 
     this.#setInnerHandlers();
+    this.#setDatepicker();
   }
 
   get template() {
@@ -178,6 +179,7 @@ export default class EditPointView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setCancelClickHandler(this._callback.cancelClick);
   };
