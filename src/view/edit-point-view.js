@@ -1,6 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate } from '../utils/point.js';
 import { TYPES } from '../const.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   basePrice: null,
@@ -134,6 +136,8 @@ export default class EditPointView extends AbstractStatefulView {
   #destinations = null;
   #offers = null;
 
+  #datepicker = null;
+
   constructor(point = BLANK_POINT, destinations, offers) {
     super();
     this._state = EditPointView.parsePointToState(point);
@@ -146,6 +150,15 @@ export default class EditPointView extends AbstractStatefulView {
   get template() {
     return createEditPointTemplate(this._state, this.#destinations, this.#offers);
   }
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
+  };
 
   reset = (point) => {
     this.updateElement(
@@ -212,6 +225,12 @@ export default class EditPointView extends AbstractStatefulView {
     });
   };
 
+  #changeDateFromHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate
+    });
+  };
+
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(EditPointView.parseStateToPoint(this._state));
@@ -220,6 +239,17 @@ export default class EditPointView extends AbstractStatefulView {
   #cancelClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.cancelClick();
+  };
+
+  #setDatepicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('.event__input--time'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#changeDateFromHandler
+      }
+    );
   };
 
   #setInnerHandlers = () => {
