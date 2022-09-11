@@ -1,3 +1,15 @@
+const TYPES = [
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant',
+];
+
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future'
@@ -8,4 +20,4 @@ const SortType = {
   PRICE: 'price'
 };
 
-export {FilterType, SortType};
+export {TYPES, FilterType, SortType};
