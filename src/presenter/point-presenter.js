@@ -35,10 +35,10 @@ export default class PointPresenter {
     const prevEditPointComponent = this.#editPointComponent;
 
     this.#pointComponent = new PointView(this.#point, this.#listOffers, this.#listDestinations);
-    this.#editPointComponent = new EditPointView(this.#point, this.#listOffers, this.#listDestinations);
+    this.#editPointComponent = new EditPointView(this.#point, this.#listDestinations, this.#listOffers);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditPointClick);
-    this.#editPointComponent.setSaveClickHandler(this.#handlePointSubmit);
+    this.#editPointComponent.setFormSubmitHandler(this.#handlePointSubmit);
     this.#editPointComponent.setCancelClickHandler(this.#handleCancelEditPointClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
@@ -66,6 +66,7 @@ export default class PointPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#editPointComponent.reset(this.#point);
       this.#replaceFormToItem();
     }
   };
@@ -84,6 +85,7 @@ export default class PointPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#editPointComponent.reset(this.#point);
       this.#replaceFormToItem();
       this.#removeEscEventListener();
     }
@@ -102,13 +104,14 @@ export default class PointPresenter {
     this.#addEscEventListener();
   };
 
-  #handlePointSubmit = () => {
-    this.#changeData(this.#point);
+  #handlePointSubmit = (point) => {
+    this.#changeData(point);
     this.#replaceFormToItem();
     this.#removeEscEventListener();
   };
 
   #handleCancelEditPointClick = () => {
+    this.#editPointComponent.reset(this.#point);
     this.#replaceFormToItem();
     this.#removeEscEventListener();
   };
