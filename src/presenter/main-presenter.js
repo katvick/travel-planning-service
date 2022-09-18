@@ -63,6 +63,8 @@ export default class MainPresenter {
       case UserAction.UPDATE_POINT:
         this.#pointsModel.updatePoint(updateType, update);
         break;
+      case UserAction.DELETE_POINT:
+        this.#pointsModel.deletePoint(updateType, update);
     }
   };
 
@@ -114,13 +116,6 @@ export default class MainPresenter {
   #renderNoPoints = () => {
     render(this.#noPointComponent, this.#eventsContainer);
   };
-
-  // #renderListPoints = () => {
-  //   const points = this.points;
-
-  //   render(this.#listPointsComponent, this.#eventsContainer);
-  //   this.#renderPoints(points);
-  // };
 
   #clearPage = ({resetSortType = false} = {}) => {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());

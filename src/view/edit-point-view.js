@@ -60,6 +60,10 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
   const dataFromUI = humanizePointDate(dateFrom, 'DD/MM/YY HH:mm');
   const dataToUI = humanizePointDate(dateTo, 'DD/MM/YY HH:mm');
 
+  const buttonCloseEvent = `<button class="event__rollup-btn" type="button">
+  <span class="visually-hidden">Close event</span>
+</button>`;
+
   return `<li class='trip-events__item' id=${id}>
   <form class='event event--edit' action='#' method='post'>
     <header class='event__header'>
@@ -107,7 +111,9 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
       </div>
 
       <button class='event__save-btn  btn  btn--blue' type='submit'>Save</button>
-      <button class='event__reset-btn' type='reset'>Cancel</button>
+      <button class='event__reset-btn' type='reset'>${point === null ? 'Cancel' : 'Delete'}</button>
+      ${point === null ? '' : buttonCloseEvent}
+    
     </header>
     <section class='event__details'>
       <section class='event__section  event__section--offers'>
@@ -177,15 +183,15 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   };
 
-  setCancelClickHandler = (callback) => {
-    this._callback.cancelClick = callback;
-    this.element.querySelector('form').addEventListener('reset', this.#cancelClickHandler);
+  setPointResetHandler = (callback) => {
+    this._callback.pointReset = callback;
+    this.element.querySelector('form').addEventListener('reset', this.#pointResetHandler);
   };
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setCancelClickHandler(this._callback.cancelClick);
+    this.setPointResetHandler(this._callback.pointReset);
   };
 
   #changeTypeHandler = (evt) => {
@@ -248,9 +254,9 @@ export default class EditPointView extends AbstractStatefulView {
     this._callback.formSubmit(EditPointView.parseStateToPoint(this._state));
   };
 
-  #cancelClickHandler = (evt) => {
+  #pointResetHandler = (evt) => {
     evt.preventDefault();
-    this._callback.cancelClick();
+    this._callback.pointReset();
   };
 
   #setDatepicker = () => {
