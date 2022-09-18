@@ -3,7 +3,6 @@ import ListPointsView from '../view/list-points-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import PointPresenter from './point-presenter.js';
 import { render } from '../framework/render.js';
-import { updatePoint } from '../utils/common.js';
 import { SortType } from '../const.js';
 import { sortPointDay, sortPointPrice } from '../utils/point.js';
 
@@ -15,24 +14,26 @@ export default class MainPresenter {
   #listDestinations = null;
   #listOffers = null;
 
-  #listPoints = [];
   #pointPresenter = new Map();
   #currentSortType = SortType.DAY;
-  #sourcedPagePoints = [];
 
   constructor(eventsContainer, pointsModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointsModel = pointsModel;
   }
 
-  get ponts() {
-    return this.#pointsModel.points;
+  get points() {
+    switch (this.#currentSortType) {
+      case SortType.DAY:
+        return this.#pointsModel.sort(sortPointDay);
+      case SortType.PRICE:
+        return this.#pointsModel.sort(sortPointPrice);
+    }
+
+    return this.#pointsModel;
   }
 
   init = () => {
-    this.#listPoints = [...this.#pointsModel.points];
-    this.#sourcedPagePoints = [...this.#pointsModel.points];
-
     this.#listDestinations = [...this.#pointsModel.destinations];
     this.#listOffers = [...this.#pointsModel.offers];
 
@@ -44,24 +45,8 @@ export default class MainPresenter {
   };
 
   #handlePointChange = (updatedPoint) => {
-    this.#listPoints = updatePoint(this.#listPoints, updatedPoint);
-    this.#sourcedPagePoints = updatePoint(this.#sourcedPagePoints, updatePoint);
+    // здесь будем вызывать обновление модели
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#listOffers, this.#listDestinations);
-  };
-
-  #sortPoints = (sortType) => {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#listPoints.sort(sortPointDay);
-        break;
-      case SortType.PRICE:
-        this.#listPoints.sort(sortPointPrice);
-        break;
-      default:
-        this.#listPoints = [...this.#sourcedPagePoints];
-    }
-
-    this.#currentSortType = sortType;
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -85,8 +70,8 @@ export default class MainPresenter {
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
-  #renderPoints = () => {
-    this.#listPoints.forEach((point) => {
+  #renderPoints = (points) => {
+    points.forEach((point) => {
       this.#renderPoint(point, this.#listOffers, this.#listDestinations);
     });
   };
@@ -96,8 +81,10 @@ export default class MainPresenter {
   };
 
   #renderListPoints = () => {
+    const points = this.points; 
+    
     render(this.#listPointsComponent, this.#eventsContainer);
-    this.#renderPoints();
+    this.#renderPoints(points);
   };
 
   #clearListPoints = () => {
@@ -106,7 +93,7 @@ export default class MainPresenter {
   };
 
   #renderPage = () => {
-    if (this.#listPoints.every((point) => point.isArchive)) {
+    if (this.points.every((point) => point === null)) {
       this.#renderNoPoints();
       return;
     }
