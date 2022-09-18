@@ -5,6 +5,7 @@ import PointPresenter from './point-presenter.js';
 import { render } from '../framework/render.js';
 import { SortType } from '../const.js';
 import { sortPointDay, sortPointPrice } from '../utils/point.js';
+import { UpdateType, UserAction } from '../const.js';
 
 export default class MainPresenter {
   #listPointsComponent = new ListPointsView();
@@ -20,8 +21,8 @@ export default class MainPresenter {
   constructor(eventsContainer, pointsModel, offersModel, destinationsModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointsModel = pointsModel;
-    this.#listOffers = offersModel;
-    this.#listDestinations = destinationsModel;
+    this.#listOffers = offersModel.offers;
+    this.#listDestinations = destinationsModel.destinations;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
   }
@@ -29,12 +30,12 @@ export default class MainPresenter {
   get points() {
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return this.#pointsModel.sort(sortPointDay);
+        return [...this.#pointsModel.points].sort(sortPointDay);
       case SortType.PRICE:
-        return this.#pointsModel.sort(sortPointPrice);
+        return [...this.#pointsModel.points].sort(sortPointPrice);
     }
 
-    return this.#pointsModel;
+    return this.#pointsModel.points;
   }
 
   get offers() {
@@ -53,25 +54,35 @@ export default class MainPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  // #handlePointChange = (updatedPoint) => {
-  //   // здесь будем вызывать обновление модели
-  //   this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.offers, this.destinations);
-  // };
-
   #handleViewAction = (actionType, updateType, update) => {
-	console.log("TCL: MainPresenter -> #handleViewAction -> actionType, updateType, update", actionType, updateType, update);
-  // здесь будем вызывать обновление модели:
+    // здесь будем вызывать обновление модели:
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать.
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить.
     // update - обновленные данные.
+    switch (actionType) {
+      case UserAction.ADD_POINT:
+        this.#pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.UPDATE_POINT:
+        this.#pointsModel.updatePoint(updateType, update);
+        break;
+    }
   };
 
   #handleModelEvent = (updateType, data) => {
-	console.log("TCL: MainPresenter -> #handleModelEvent -> updateType, data", updateType, data);
-  // В зависимости от типа изменений решаем, что делать:
-  // - обновить часть списка (например, когда поменялось описание)
-  // - обновить список
-  // - обновить всю доску (например, при переключении фильтра)
+    // В зависимости от типа изменений решаем, что делать:
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.#pointPresenter.get(data.id).init(data, this.offers, this.destinations);
+        break;
+      case UpdateType.MINOR:
+        // - обновить список
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   };
 
   #handleSortTypeChange = (sortType) => {

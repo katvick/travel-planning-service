@@ -50,7 +50,7 @@ const createEventTypeList = (point) => {
   return eventTypeListTemplate.join('');
 };
 
-const createEditPointTemplate = (point, listDestinations, listOffers) => {
+const createEditPointTemplate = (point, listOffers, listDestinations) => {
   const { basePrice, dateFrom, dateTo, destination, id, type } = point;
   const destinationByPoint = listDestinations.find((item) => destination === item.id);
 
@@ -139,7 +139,7 @@ export default class EditPointView extends AbstractStatefulView {
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor(point = BLANK_POINT, destinations, offers) {
+  constructor(point = BLANK_POINT, offers, destinations) {
     super();
     this._state = EditPointView.parsePointToState(point);
     this.#destinations = destinations;
@@ -149,7 +149,7 @@ export default class EditPointView extends AbstractStatefulView {
   }
 
   get template() {
-    return createEditPointTemplate(this._state, this.#destinations, this.#offers);
+    return createEditPointTemplate(this._state, this.#offers, this.#destinations);
   }
 
   removeElement = () => {
