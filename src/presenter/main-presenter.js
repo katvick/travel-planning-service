@@ -22,6 +22,8 @@ export default class MainPresenter {
     this.#pointsModel = pointsModel;
     this.#listOffers = offersModel;
     this.#listDestinations = destinationsModel;
+
+    this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
@@ -51,9 +53,25 @@ export default class MainPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatedPoint) => {
-    // здесь будем вызывать обновление модели
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.offers, this.destinations);
+  // #handlePointChange = (updatedPoint) => {
+  //   // здесь будем вызывать обновление модели
+  //   this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.offers, this.destinations);
+  // };
+
+  #handleViewAction = (actionType, updateType, update) => {
+	console.log("TCL: MainPresenter -> #handleViewAction -> actionType, updateType, update", actionType, updateType, update);
+  // здесь будем вызывать обновление модели:
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать.
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить.
+    // update - обновленные данные.
+  };
+
+  #handleModelEvent = (updateType, data) => {
+	console.log("TCL: MainPresenter -> #handleModelEvent -> updateType, data", updateType, data);
+  // В зависимости от типа изменений решаем, что делать:
+  // - обновить часть списка (например, когда поменялось описание)
+  // - обновить список
+  // - обновить всю доску (например, при переключении фильтра)
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -72,7 +90,7 @@ export default class MainPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#listPointsComponent.element, this.#handlePointChange, this.#handleModeChange);
+    const pointPresenter = new PointPresenter(this.#listPointsComponent.element, this.#handleViewAction, this.#handleModeChange);
     pointPresenter.init(point, this.offers, this.destinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   };

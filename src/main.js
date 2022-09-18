@@ -8,12 +8,13 @@ import { generateFilter } from './mock/filter.js';
 
 const filtersElement = document.querySelector('.trip-controls__filters');
 const eventsElement = document.querySelector('.trip-events');
+
 const pointsModel = new PointsModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const pagePresenter = new MainPresenter(eventsElement, pointsModel, offersModel, destinationsModel);
-const filters = generateFilter(pointsModel.points);
 
+const filters = generateFilter(pointsModel.points);
 render(new FiltersView(filters), filtersElement);
 
 pagePresenter.init();
