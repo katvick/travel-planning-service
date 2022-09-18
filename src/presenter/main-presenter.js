@@ -11,15 +11,17 @@ export default class MainPresenter {
   #sortComponent = new SortingView();
   #eventsContainer = null;
   #pointsModel = null;
-  #listDestinations = null;
   #listOffers = null;
+  #listDestinations = null;
 
   #pointPresenter = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor(eventsContainer, pointsModel) {
+  constructor(eventsContainer, pointsModel, offersModel, destinationsModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointsModel = pointsModel;
+    this.#listOffers = offersModel;
+    this.#listDestinations = destinationsModel;
   }
 
   get points() {
@@ -33,10 +35,15 @@ export default class MainPresenter {
     return this.#pointsModel;
   }
 
-  init = () => {
-    this.#listDestinations = [...this.#pointsModel.destinations];
-    this.#listOffers = [...this.#pointsModel.offers];
+  get offers() {
+    return this.#listOffers;
+  }
 
+  get destinations() {
+    return this.#listDestinations;
+  }
+
+  init = () => {
     this.#renderPage();
   };
 
@@ -46,7 +53,7 @@ export default class MainPresenter {
 
   #handlePointChange = (updatedPoint) => {
     // здесь будем вызывать обновление модели
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#listOffers, this.#listDestinations);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.offers, this.destinations);
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -54,7 +61,7 @@ export default class MainPresenter {
       return;
     }
 
-    this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clearListPoints();
     this.#renderListPoints();
   };
@@ -66,13 +73,13 @@ export default class MainPresenter {
 
   #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#listPointsComponent.element, this.#handlePointChange, this.#handleModeChange);
-    pointPresenter.init(point, this.#listOffers, this.#listDestinations);
+    pointPresenter.init(point, this.offers, this.destinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
   #renderPoints = (points) => {
     points.forEach((point) => {
-      this.#renderPoint(point, this.#listOffers, this.#listDestinations);
+      this.#renderPoint(point, this.offers, this.destinations);
     });
   };
 
@@ -81,8 +88,8 @@ export default class MainPresenter {
   };
 
   #renderListPoints = () => {
-    const points = this.points; 
-    
+    const points = this.points;
+
     render(this.#listPointsComponent, this.#eventsContainer);
     this.#renderPoints(points);
   };
