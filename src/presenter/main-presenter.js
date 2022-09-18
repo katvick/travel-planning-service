@@ -25,6 +25,10 @@ export default class MainPresenter {
     this.#pointsModel = pointsModel;
   }
 
+  get ponts() {
+    return this.#pointsModel.points;
+  }
+
   init = () => {
     this.#listPoints = [...this.#pointsModel.points];
     this.#sourcedPagePoints = [...this.#pointsModel.points];
