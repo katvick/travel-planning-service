@@ -64,6 +64,8 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
     <span class="visually-hidden">Close event</span>
   </button>`;
 
+  const checkPoint = point !== null;
+
   return `<li class='trip-events__item' id=${id}>
   <form class='event event--edit' action='#' method='post'>
     <header class='event__header'>
@@ -111,8 +113,8 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
       </div>
 
       <button class='event__save-btn  btn  btn--blue' type='submit'>Save</button>
-      <button class='event__reset-btn' type='reset'>${point === null ? 'Cancel' : 'Delete'}</button>
-      ${point === null ? '' : buttonCloseEvent}
+      <button class='event__reset-btn' type='reset' id='${checkPoint ? 'delete-btn' : 'cancel-btn'}'>${checkPoint ? 'Delete' : 'Cancel'}</button>
+      ${checkPoint ? buttonCloseEvent : ''}
     
     </header>
     <section class='event__details'>
@@ -183,9 +185,14 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   };
 
+  setPointDeleteHandler = (callback) => {
+    this._callback.pointDelete = callback;
+    this.element.querySelector('#delete-btn').addEventListener('click', this.#pointDeleteHandler);
+  };
+
   setPointResetHandler = (callback) => {
     this._callback.pointReset = callback;
-    this.element.querySelector('form').addEventListener('reset', this.#pointResetHandler);
+    this.element.querySelector('#cancel-btn').addEventListener('click', this.#pointResetHandler);
   };
 
   setCloseClickHandler = (callback) => {
@@ -196,7 +203,8 @@ export default class EditPointView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setPointResetHandler(this._callback.pointReset);
+    this.setPointDeleteHandler(this._callback.pointDelete);
+    // this.setPointResetHandler(this._callback.pointReset);
     this.setCloseClickHandler(this._callback.closeClick);
   };
 
@@ -258,6 +266,11 @@ export default class EditPointView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(EditPointView.parseStateToPoint(this._state));
+  };
+
+  #pointDeleteHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.pointDelete(EditPointView.parseStateToPoint(this._state));
   };
 
   #pointResetHandler = (evt) => {

@@ -40,8 +40,13 @@ export default class PointPresenter {
 
     this.#pointComponent.setEditClickHandler(this.#handleEditPointClick);
     this.#editPointComponent.setFormSubmitHandler(this.#handlePointSubmit);
-    this.#editPointComponent.setPointResetHandler(this.#handlePointReset);
-    this.#editPointComponent.setCloseClickHandler(this.#handleClosePointClick);
+
+    if (point !== null) {
+      this.#editPointComponent.setPointDeleteHandler(this.#handlePointDelete);
+      this.#editPointComponent.setCloseClickHandler(this.#handleClosePointClick);
+    } else {
+      this.#editPointComponent.setPointResetHandler(this.#handlePointReset);
+    }
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
       render(this.#pointComponent, this.#listPointsContainer);
@@ -114,6 +119,14 @@ export default class PointPresenter {
     );
     this.#replaceFormToItem();
     this.#removeEscEventListener();
+  };
+
+  #handlePointDelete = (point) => {
+    this.#changeData (
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 
   #handlePointReset = () => {
