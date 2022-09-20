@@ -61,8 +61,8 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
   const dataToUI = humanizePointDate(dateTo, 'DD/MM/YY HH:mm');
 
   const buttonCloseEvent = `<button class="event__rollup-btn" type="button">
-  <span class="visually-hidden">Close event</span>
-</button>`;
+    <span class="visually-hidden">Close event</span>
+  </button>`;
 
   return `<li class='trip-events__item' id=${id}>
   <form class='event event--edit' action='#' method='post'>
@@ -188,10 +188,16 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('reset', this.#pointResetHandler);
   };
 
+  setCloseClickHandler = (callback) => {
+    this._callback.closeClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeClickHandler);
+  };
+
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setPointResetHandler(this._callback.pointReset);
+    this.setCloseClickHandler(this._callback.closeClick);
   };
 
   #changeTypeHandler = (evt) => {
@@ -257,6 +263,11 @@ export default class EditPointView extends AbstractStatefulView {
   #pointResetHandler = (evt) => {
     evt.preventDefault();
     this._callback.pointReset();
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeClick();
   };
 
   #setDatepicker = () => {

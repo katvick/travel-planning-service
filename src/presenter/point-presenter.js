@@ -41,6 +41,7 @@ export default class PointPresenter {
     this.#pointComponent.setEditClickHandler(this.#handleEditPointClick);
     this.#editPointComponent.setFormSubmitHandler(this.#handlePointSubmit);
     this.#editPointComponent.setPointResetHandler(this.#handlePointReset);
+    this.#editPointComponent.setCloseClickHandler(this.#handleClosePointClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
       render(this.#pointComponent, this.#listPointsContainer);
@@ -116,6 +117,12 @@ export default class PointPresenter {
   };
 
   #handlePointReset = () => {
+    this.#editPointComponent.reset(this.#point);
+    this.#replaceFormToItem();
+    this.#removeEscEventListener();
+  };
+
+  #handleClosePointClick = () => {
     this.#editPointComponent.reset(this.#point);
     this.#replaceFormToItem();
     this.#removeEscEventListener();
