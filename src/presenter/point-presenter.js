@@ -2,6 +2,7 @@ import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { render, replace, remove } from '../framework/render.js';
 import { UserAction, UpdateType } from '../const.js';
+import { isDateEqual } from '../utils/point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -111,12 +112,17 @@ export default class PointPresenter {
     this.#addEscEventListener();
   };
 
-  #handlePointSubmit = (point) => {
+  #handlePointSubmit = (update) => {
+    const isMinorUpdate =
+      !isDateEqual(this.#point.dateFrom, update.dateFrom) ||
+      this.#point.basePrice !== update.basePrice;
+
     this.#changeData(
       UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      point,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update,
     );
+
     this.#replaceFormToItem();
     this.#removeEscEventListener();
   };
