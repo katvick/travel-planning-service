@@ -204,7 +204,6 @@ export default class EditPointView extends AbstractStatefulView {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setPointDeleteHandler(this._callback.pointDelete);
-    // this.setPointResetHandler(this._callback.pointReset);
     this.setCloseClickHandler(this._callback.closeClick);
   };
 

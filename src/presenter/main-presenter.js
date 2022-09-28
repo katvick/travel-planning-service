@@ -3,9 +3,8 @@ import ListPointsView from '../view/list-points-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import PointPresenter from './point-presenter.js';
 import { render, remove } from '../framework/render.js';
-import { SortType } from '../const.js';
+import { SortType, UpdateType, UserAction } from '../const.js';
 import { sortPointDay, sortPointPrice } from '../utils/point.js';
-import { UpdateType, UserAction } from '../const.js';
 
 export default class MainPresenter {
   #listPointsComponent = new ListPointsView();
