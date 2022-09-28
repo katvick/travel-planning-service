@@ -5,12 +5,18 @@ import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import FilterModel from './model/filter-model.js';
 
+import { render } from './framework/render.js';
+import NewPointButtonView from './view/new-point-button-view.js';
+
 import { generatePoint } from './mock/point.js';
 import { offers } from './mock/offers.js';
 import { destinations } from './mock/destinations.js';
 
+const newPointButtonElement = document.querySelector('.trip-main');
 const filtersElement = document.querySelector('.trip-controls__filters');
 const eventsElement = document.querySelector('.trip-events');
+
+render(new NewPointButtonView(), newPointButtonElement);
 
 const points = Array.from({ length: 10 }, generatePoint);
 
