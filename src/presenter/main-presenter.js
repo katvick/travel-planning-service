@@ -4,6 +4,7 @@ import NoPointsView from '../view/no-points-view.js';
 import PointPresenter from './point-presenter.js';
 import { render, remove } from '../framework/render.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
+import { filter } from '../utils/filter.js';
 import { sortPointDay, sortPointPrice } from '../utils/point.js';
 
 export default class MainPresenter {
@@ -14,28 +15,35 @@ export default class MainPresenter {
   #pointsModel = null;
   #listOffers = null;
   #listDestinations = null;
+  #filterModel = null;
 
   #pointPresenter = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor(eventsContainer, pointsModel, offersModel, destinationsModel) {
+  constructor(eventsContainer, pointsModel, offersModel, destinationsModel, filterModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointsModel = pointsModel;
     this.#listOffers = offersModel;
     this.#listDestinations = destinationsModel;
+    this.#filterModel = filterModel;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return [...this.#pointsModel.points].sort(sortPointDay);
+        return filteredPoints.sort(sortPointDay);
       case SortType.PRICE:
-        return [...this.#pointsModel.points].sort(sortPointPrice);
+        return filteredPoints.sort(sortPointPrice);
     }
 
-    return this.#pointsModel.points;
+    return filteredPoints;
   }
 
   get offers() {

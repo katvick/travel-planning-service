@@ -19,7 +19,7 @@ const offersModel = new OffersModel(offers);
 const destinationsModel = new DestinationsModel(destinations);
 const filterModel = new FilterModel();
 
-const pagePresenter = new MainPresenter(eventsElement, pointsModel, offersModel, destinationsModel);
+const pagePresenter = new MainPresenter(eventsElement, pointsModel, offersModel, destinationsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
 
 filterPresenter.init();
