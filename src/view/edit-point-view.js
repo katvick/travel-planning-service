@@ -3,15 +3,16 @@ import { humanizePointDate } from '../utils/point.js';
 import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import dayjs from 'dayjs';
 
 const BLANK_POINT = {
-  basePrice: null,
-  dateFrom: null,
-  dateTo: null,
-  destination: null,
+  basePrice: 0,
+  dateFrom: dayjs(),
+  dateTo: dayjs(),
+  destination: 2,
   id: null,
-  type: null,
-  offers: [0],
+  type: 'taxi',
+  offers: [],
 };
 
 const createPicturesTemplate = (pictures) => {
@@ -52,6 +53,8 @@ const createEventTypeList = (point) => {
 
 const createEditPointTemplate = (point, listOffers, listDestinations) => {
   const { basePrice, dateFrom, dateTo, destination, id, type } = point;
+  const checkPoint = point.id !== null;
+
   const destinationByPoint = listDestinations.find((item) => destination === item.id);
 
   const offersByType = listOffers.find((item) => item.type === point.type);
@@ -63,8 +66,6 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
   const buttonCloseEvent = `<button class="event__rollup-btn" type="button">
     <span class="visually-hidden">Close event</span>
   </button>`;
-
-  const checkPoint = point !== null;
 
   return `<li class='trip-events__item' id=${id}>
   <form class='event event--edit' action='#' method='post'>
@@ -203,8 +204,13 @@ export default class EditPointView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setPointDeleteHandler(this._callback.pointDelete);
-    this.setCloseClickHandler(this._callback.closeClick);
+
+    if (this._state.id !== null) {
+      this.setPointDeleteHandler(this._callback.pointDelete);
+      this.setCloseClickHandler(this._callback.closeClick);
+    } else {
+      this.setPointResetHandler(this._callback.pointReset);
+    }
   };
 
   #changeTypeHandler = (evt) => {

@@ -1,7 +1,10 @@
 import SortingView from '../view/sorting-view.js';
 import ListPointsView from '../view/list-points-view.js';
 import NoPointsView from '../view/no-points-view.js';
+
 import PointPresenter from './point-presenter.js';
+import NewPointPresenter from './point-new-presenter.js';
+
 import { render, remove } from '../framework/render.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { filter } from '../utils/filter.js';
@@ -12,21 +15,26 @@ export default class MainPresenter {
   #sortComponent = null;
   #noPointComponent = null;
   #eventsContainer = null;
+
+  #filterModel = null;
   #pointsModel = null;
   #listOffers = null;
   #listDestinations = null;
-  #filterModel = null;
 
   #pointPresenter = new Map();
+  #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
   constructor(eventsContainer, pointsModel, offersModel, destinationsModel, filterModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointsModel = pointsModel;
+		console.log("TCL: MainPresenter -> constructor -> this.#pointsModel", this.#pointsModel)
     this.#listOffers = offersModel;
     this.#listDestinations = destinationsModel;
     this.#filterModel = filterModel;
+
+    this.#newPointPresenter = new NewPointPresenter(this.#listPointsComponent.element, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -59,7 +67,14 @@ export default class MainPresenter {
     this.#renderPage();
   };
 
+  createPoint = (callback) => {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newPointPresenter.init(callback, this.offers, this.destinations);
+  };
+
   #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
@@ -127,6 +142,7 @@ export default class MainPresenter {
   };
 
   #clearPage = ({resetSortType = false} = {}) => {
+    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
