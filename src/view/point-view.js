@@ -21,12 +21,12 @@ const createPointTemplate = (point, listOffers, listDestinations) => {
 
   const destinationByPoint = listDestinations.find((item) => destination === item.id);
 
-  const pointDateMarkup = humanizePointDate(dateFrom, 'YYYY-MM-DD');
+  const pointDateMarkup = humanizePointDate(dateFrom, 'YYYY-MM-D');
   const pointDateUI = humanizePointDate(dateFrom, 'MMM D');
   const pointTimeFromUI = humanizePointDate(dateFrom, 'H:mm');
   const pointTimeToUI = humanizePointDate(dateTo, 'H:mm');
-  const pointDateFromMarkup = humanizePointDate(dateFrom, 'YYYY-MM-DDTHH:mm');
-  const pointDateToMarkup = humanizePointDate(dateTo, 'YYYY-MM-DDTHH:mm');
+  const pointDateFromMarkup = humanizePointDate(dateFrom, 'YYYY-MM-DTHH:mm');
+  const pointDateToMarkup = humanizePointDate(dateTo, 'YYYY-MM-DTHH:mm');
 
   return `<li class='trip-events__item' id=${id}>
         <div class='event'>

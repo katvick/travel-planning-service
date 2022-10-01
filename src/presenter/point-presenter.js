@@ -1,6 +1,8 @@
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { render, replace, remove } from '../framework/render.js';
+import { UserAction, UpdateType } from '../const.js';
+import { isDateEqual } from '../utils/point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -35,11 +37,12 @@ export default class PointPresenter {
     const prevEditPointComponent = this.#editPointComponent;
 
     this.#pointComponent = new PointView(this.#point, this.#listOffers, this.#listDestinations);
-    this.#editPointComponent = new EditPointView(this.#point, this.#listDestinations, this.#listOffers);
+    this.#editPointComponent = new EditPointView(this.#point, this.#listOffers, this.#listDestinations);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditPointClick);
     this.#editPointComponent.setFormSubmitHandler(this.#handlePointSubmit);
-    this.#editPointComponent.setCancelClickHandler(this.#handleCancelEditPointClick);
+    this.#editPointComponent.setPointDeleteHandler(this.#handlePointDelete);
+    this.#editPointComponent.setCloseClickHandler(this.#handleClosePointClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
       render(this.#pointComponent, this.#listPointsContainer);
@@ -104,13 +107,30 @@ export default class PointPresenter {
     this.#addEscEventListener();
   };
 
-  #handlePointSubmit = (point) => {
-    this.#changeData(point);
+  #handlePointSubmit = (update) => {
+    const isMinorUpdate =
+      !isDateEqual(this.#point.dateFrom, update.dateFrom) ||
+      this.#point.basePrice !== update.basePrice;
+
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update,
+    );
+
     this.#replaceFormToItem();
     this.#removeEscEventListener();
   };
 
-  #handleCancelEditPointClick = () => {
+  #handlePointDelete = (point) => {
+    this.#changeData (
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
+  #handleClosePointClick = () => {
     this.#editPointComponent.reset(this.#point);
     this.#replaceFormToItem();
     this.#removeEscEventListener();
