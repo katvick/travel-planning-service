@@ -16,7 +16,7 @@ const newPointButtonElement = document.querySelector('.trip-main');
 const filtersElement = document.querySelector('.trip-controls__filters');
 const eventsElement = document.querySelector('.trip-events');
 
-const points = Array.from({ length: 5 }, generatePoint);
+const points = Array.from({ length: 10 }, generatePoint);
 
 const pointsModel = new PointsModel(points);
 const offersModel = new OffersModel(offers);
