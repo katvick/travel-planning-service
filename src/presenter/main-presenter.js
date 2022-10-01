@@ -29,7 +29,6 @@ export default class MainPresenter {
   constructor(eventsContainer, pointsModel, offersModel, destinationsModel, filterModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointsModel = pointsModel;
-		console.log("TCL: MainPresenter -> constructor -> this.#pointsModel", this.#pointsModel)
     this.#listOffers = offersModel;
     this.#listDestinations = destinationsModel;
     this.#filterModel = filterModel;
