@@ -143,6 +143,10 @@ export default class MainPresenter {
     });
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#eventsContainer);
+  };
+
   #renderNoPoints = () => {
     this.#noPointComponent = new NoPointsView(this.#filterType);
     render(this.#noPointComponent, this.#eventsContainer);
@@ -154,6 +158,7 @@ export default class MainPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
@@ -165,6 +170,13 @@ export default class MainPresenter {
   };
 
   #renderPage = () => {
+    render(this.#listPointsComponent, this.#eventsContainer);
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.points;
 
     if (points.length === 0) {
@@ -173,7 +185,6 @@ export default class MainPresenter {
     }
 
     this.#renderSort();
-    render(this.#listPointsComponent, this.#eventsContainer);
     this.#renderPoints(points);
   };
 
