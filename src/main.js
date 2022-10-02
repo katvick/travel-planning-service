@@ -12,7 +12,6 @@ const END_POINT = 'https://18.ecmascript.pages.academy/big-trip/';
 import { render } from './framework/render.js';
 import NewPointButtonView from './view/new-point-button-view.js';
 
-import { generatePoint } from './mock/point.js';
 import { offers } from './mock/offers.js';
 import { destinations } from './mock/destinations.js';
 
@@ -20,9 +19,8 @@ const newPointButtonElement = document.querySelector('.trip-main');
 const filtersElement = document.querySelector('.trip-controls__filters');
 const eventsElement = document.querySelector('.trip-events');
 
-const points = Array.from({ length: 10 }, generatePoint);
 
-const pointsModel = new PointsModel(points, new PointsApiService(END_POINT, AUTHORIZATION));
+const pointsModel = new PointsModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const offersModel = new OffersModel(offers);
 const destinationsModel = new DestinationsModel(destinations);
 const filterModel = new FilterModel();
@@ -45,4 +43,6 @@ newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
 
 filterPresenter.init();
 pagePresenter.init();
+pointsModel.init();
+
 

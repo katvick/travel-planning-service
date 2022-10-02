@@ -1,12 +1,11 @@
 import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
-  #points = null;
+  #points = [];
   #pointsApiService = null;
 
-  constructor (points, pointsApiService) {
+  constructor (pointsApiService) {
     super();
-    this.#points = points;
     this.#pointsApiService = pointsApiService;
 
     this.#pointsApiService.points.then((points) =>{
@@ -17,6 +16,15 @@ export default class PointsModel extends Observable {
   get points() {
     return this.#points;
   }
+
+  init = async () => {
+    try {
+      const points = await this.#pointsApiService.points;
+      this.#points = points.map(this.#adaptToClient);
+    } catch(err) {
+      this.#points = [];
+    }
+  };
 
   updatePoint = (updateType, update) => {
     const index = this.#points.findIndex((item) => item.id === update.id);
