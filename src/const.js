@@ -1,15 +1,3 @@
-const TYPES = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant',
-];
-
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future'
@@ -33,4 +21,4 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export {TYPES, FilterType, SortType, UserAction, UpdateType};
+export {FilterType, SortType, UserAction, UpdateType};
