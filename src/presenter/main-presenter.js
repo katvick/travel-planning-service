@@ -171,6 +171,7 @@ export default class MainPresenter {
 
   #renderPage = () => {
     render(this.#listPointsComponent, this.#eventsContainer);
+    this.#renderSort();
 
     if (this.#isLoading) {
       this.#renderLoading();
@@ -184,7 +185,6 @@ export default class MainPresenter {
       return;
     }
 
-    this.#renderSort();
     this.#renderPoints(points);
   };
 
