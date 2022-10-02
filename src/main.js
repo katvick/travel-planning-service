@@ -4,6 +4,10 @@ import PointsModel from './model/points-model.js';
 import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import FilterModel from './model/filter-model.js';
+import PointsApiService from './tasks-api-service.js';
+
+const AUTHORIZATION = 'Basic kjsdHd434bLXShn0';
+const END_POINT = 'https://18.ecmascript.pages.academy/big-trip/';
 
 import { render } from './framework/render.js';
 import NewPointButtonView from './view/new-point-button-view.js';
@@ -18,7 +22,7 @@ const eventsElement = document.querySelector('.trip-events');
 
 const points = Array.from({ length: 10 }, generatePoint);
 
-const pointsModel = new PointsModel(points);
+const pointsModel = new PointsModel(points, new PointsApiService(END_POINT, AUTHORIZATION));
 const offersModel = new OffersModel(offers);
 const destinationsModel = new DestinationsModel(destinations);
 const filterModel = new FilterModel();
