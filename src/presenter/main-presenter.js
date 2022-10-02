@@ -1,6 +1,7 @@
 import SortingView from '../view/sorting-view.js';
 import ListPointsView from '../view/list-points-view.js';
 import NoPointsView from '../view/no-points-view.js';
+import LoadingView from '../view/loading-view.js';
 
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './point-new-presenter.js';
@@ -15,6 +16,7 @@ export default class MainPresenter {
   #sortComponent = null;
   #noPointComponent = null;
   #eventsContainer = null;
+  #loadingComponent = new LoadingView();
 
   #filterModel = null;
   #pointsModel = null;
@@ -25,6 +27,7 @@ export default class MainPresenter {
   #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor(eventsContainer, pointsModel, offersModel, destinationsModel, filterModel) {
     this.#eventsContainer = eventsContainer;
@@ -91,7 +94,6 @@ export default class MainPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType);
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenter.get(data.id).init(data, this.offers, this.destinations);
@@ -102,6 +104,11 @@ export default class MainPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearPage({resetSortType: true});
+        this.#renderPage();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderPage();
         break;
     }
