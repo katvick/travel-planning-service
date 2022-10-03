@@ -7,8 +7,8 @@ import he from 'he';
 
 const BLANK_POINT = {
   basePrice: 0,
-  dateFrom: dayjs(),
-  dateTo: dayjs(),
+  dateFrom: dayjs().format() ,
+  dateTo: dayjs().format() ,
   destination: 2,
   id: null,
   type: 'taxi',
@@ -76,7 +76,7 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
   </button>`;
 
   const buttonDelete = `<button class='event__reset-btn' type='reset' id='delete-btn' ${isDisabled ? 'disabled' : ''}>
-    ${isDeleting ? 'deleting...' : 'delete'}
+    ${isDeleting ? 'Deleting...' : 'Delete'}
   </button>`;
 
   const buttonCancel = `<button class='event__reset-btn' type='reset' id='cancel-btn' ${isDisabled ? 'disabled' : ''}>
