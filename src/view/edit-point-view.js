@@ -15,9 +15,9 @@ const BLANK_POINT = {
   offers: [],
 };
 
-const createEventTypeListTemplate = (offers, point) => {
+const createEventTypeListTemplate = (offers, point, isDisabled) => {
   const eventTypeListTemplate = offers.map(({type}) => `
-    <div class='event__type-item'>
+    <div class='event__type-item' ${isDisabled ? 'disabled' : ''}>
       <input id='event-type-${type}-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='${type}' 
       ${point.type === type ? 'checked' : ''}>
       <label class='event__type-label  event__type-label--${type}' for='event-type-${type}-1'>${type}</label>
@@ -27,17 +27,17 @@ const createEventTypeListTemplate = (offers, point) => {
   return eventTypeListTemplate.join('');
 };
 
-const createCityListTemplate = (destinations) => {
+const createCityListTemplate = (destinations, isDisabled) => {
   const cityListTemplate = destinations.map(({name}) => `
-    <option value='${name}'></option>
+    <option value='${name}' ${isDisabled ? 'disabled' : ''}></option>
   `);
 
   return cityListTemplate.join('');
 };
 
-const createOffersTemplate = (offers, offersSelected) => {
+const createOffersTemplate = (offers, offersSelected, isDisabled) => {
   const offersTemplate = offers.offers.map(({ id, title, price }, index) => `
-    <div class='event__offer-selector'>
+    <div class='event__offer-selector' ${isDisabled ? 'disabled' : ''}>
       <input class='event__offer-checkbox  visually-hidden' id='event-offer-${index + 1}' type='checkbox' name='event-offer-${title}' 
       ${offersSelected.find((item) => item.id === id) ? 'checked' : ''}>
       <label class='event__offer-label' for='event-offer-${index + 1}'>
@@ -59,8 +59,8 @@ const createPicturesTemplate = (pictures) => {
   return picturesTemplate.join('');
 };
 
-const createEditPointTemplate = (point, listOffers, listDestinations) => {
-  const { basePrice, dateFrom, dateTo, destination, id, type } = point;
+const createEditPointTemplate = (point, listOffers, listDestinations, isDisabled) => {
+  const { basePrice, dateFrom, dateTo, destination, id, type, isDisabled, isSaving, isDeleting} = point;
   const checkPoint = point.id !== null;
 
   const destinationByPoint = listDestinations.find((item) => destination === item.id);
@@ -73,6 +73,14 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
 
   const buttonCloseEvent = `<button class="event__rollup-btn" type="button">
     <span class="visually-hidden">Close event</span>
+  </button>`;
+
+  const buttonDelete = `<button class='event__reset-btn' type='reset' id='delete-btn' ${isDisabled ? 'disabled' : ''}>
+    ${isDeleting ? 'deleting...' : 'delete'}
+  </button>`;
+
+  const buttonCancel = `<button class='event__reset-btn' type='reset' id='cancel-btn' ${isDisabled ? 'disabled' : ''}>
+    Cancel
   </button>`;
 
   return `<li class='trip-events__item' id=${id}>
@@ -88,7 +96,7 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
         <div class='event__type-list'>
           <fieldset class='event__type-group'>
             <legend class='visually-hidden'>Event type</legend>
-            ${createEventTypeListTemplate(listOffers, point)}
+            ${createEventTypeListTemplate(listOffers, point, isDisabled)}
           </fieldset>
         </div>
       </div>
@@ -99,16 +107,16 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
         </label>
         <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='${he.encode(destinationByPoint.name)}' list='destination-list-1'>
         <datalist id='destination-list-1'>
-          ${createCityListTemplate(listDestinations)}
+          ${createCityListTemplate(listDestinations, isDisabled)}
         </datalist>
       </div>
 
       <div class='event__field-group  event__field-group--time'>
         <label class='visually-hidden' for='event-start-time-1'>From</label>
-        <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value='${dataFromUI}'>
+        <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value='${dataFromUI}' ${isDisabled ? 'disabled' : ''}>
         &mdash;
         <label class='visually-hidden' for='event-end-time-1'>To</label>
-        <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value='${dataToUI}'>
+        <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value='${dataToUI}' ${isDisabled ? 'disabled' : ''}>
       </div>
 
       <div class='event__field-group  event__field-group--price'>
@@ -116,11 +124,12 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
           <span class='visually-hidden'>Price</span>
           &euro;
         </label>
-        <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' min='1' value='${basePrice}'>
+        <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' min='1' value='${basePrice}' ${isDisabled ? 'disabled' : ''}>
       </div>
 
-      <button class='event__save-btn  btn  btn--blue' type='submit'>Save</button>
-      <button class='event__reset-btn' type='reset' id='${checkPoint ? 'delete-btn' : 'cancel-btn'}'>${checkPoint ? 'Delete' : 'Cancel'}</button>
+      <button class='event__save-btn  btn  btn--blue' type='submit' ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+      ${checkPoint ? buttonDelete : buttonCancel}
+      
       ${checkPoint ? buttonCloseEvent : ''}
     
     </header>
@@ -326,7 +335,18 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__input--price').addEventListener('change', this.#changePriceHandler);
   };
 
-  static parsePointToState = (point) => ({...point});
+  static parsePointToState = (point) => ({...point,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
+  });
 
-  static parseStateToPoint = (state) => ({...state});
+  static parseStateToPoint = (state) => (
+    const point = {...state});
+
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
 }
