@@ -1,6 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate } from '../utils/point.js';
-import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
@@ -16,12 +15,24 @@ const BLANK_POINT = {
   offers: [],
 };
 
-const createPicturesTemplate = (pictures) => {
-  const picturesTemplate = pictures.map(({ src, description }) => `
-    <img class='event__photo' src='${src}' alt='${description}'>
+const createEventTypeListTemplate = (offers, point) => {
+  const eventTypeListTemplate = offers.map(({type}) => `
+    <div class='event__type-item'>
+      <input id='event-type-${type}-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='${type}' 
+      ${point.type === type ? 'checked' : ''}>
+      <label class='event__type-label  event__type-label--${type}' for='event-type-${type}-1'>${type}</label>
+    </div>
   `);
 
-  return picturesTemplate.join('');
+  return eventTypeListTemplate.join('');
+};
+
+const createCityListTemplate = (destinations) => {
+  const cityListTemplate = destinations.map(({name}) => `
+    <option value='${name}'></option>
+  `);
+
+  return cityListTemplate.join('');
 };
 
 const createOffersTemplate = (offers, offersSelected) => {
@@ -40,16 +51,12 @@ const createOffersTemplate = (offers, offersSelected) => {
   return offersTemplate.join('');
 };
 
-const createEventTypeList = (point) => {
-  const eventTypeListTemplate = TYPES.map((type) => `
-    <div class='event__type-item'>
-      <input id='event-type-${type}-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='${type}' 
-      ${point.type === type ? 'checked' : ''}>
-      <label class='event__type-label  event__type-label--${type}' for='event-type-${type}-1'>${type}</label>
-    </div>
+const createPicturesTemplate = (pictures) => {
+  const picturesTemplate = pictures.map(({ src, description }) => `
+    <img class='event__photo' src='${src}' alt='${description}'>
   `);
 
-  return eventTypeListTemplate.join('');
+  return picturesTemplate.join('');
 };
 
 const createEditPointTemplate = (point, listOffers, listDestinations) => {
@@ -81,7 +88,7 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
         <div class='event__type-list'>
           <fieldset class='event__type-group'>
             <legend class='visually-hidden'>Event type</legend>
-            ${createEventTypeList(point)}
+            ${createEventTypeListTemplate(listOffers, point)}
           </fieldset>
         </div>
       </div>
@@ -92,9 +99,7 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
         </label>
         <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='${he.encode(destinationByPoint.name)}' list='destination-list-1'>
         <datalist id='destination-list-1'>
-          <option value='Amsterdam'></option>
-          <option value='Geneva'></option>
-          <option value='Chamonix'></option>
+          ${createCityListTemplate(listDestinations)}
         </datalist>
       </div>
 
@@ -111,7 +116,7 @@ const createEditPointTemplate = (point, listOffers, listDestinations) => {
           <span class='visually-hidden'>Price</span>
           &euro;
         </label>
-        <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' value='${basePrice}'>
+        <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' min='1' value='${basePrice}'>
       </div>
 
       <button class='event__save-btn  btn  btn--blue' type='submit'>Save</button>

@@ -1,6 +1,7 @@
 import SortingView from '../view/sorting-view.js';
 import ListPointsView from '../view/list-points-view.js';
 import NoPointsView from '../view/no-points-view.js';
+import LoadingView from '../view/loading-view.js';
 
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './point-new-presenter.js';
@@ -15,6 +16,7 @@ export default class MainPresenter {
   #sortComponent = null;
   #noPointComponent = null;
   #eventsContainer = null;
+  #loadingComponent = new LoadingView();
 
   #filterModel = null;
   #pointsModel = null;
@@ -25,6 +27,7 @@ export default class MainPresenter {
   #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor(eventsContainer, pointsModel, offersModel, destinationsModel, filterModel) {
     this.#eventsContainer = eventsContainer;
@@ -103,6 +106,11 @@ export default class MainPresenter {
         this.#clearPage({resetSortType: true});
         this.#renderPage();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderPage();
+        break;
     }
   };
 
@@ -135,6 +143,10 @@ export default class MainPresenter {
     });
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#eventsContainer);
+  };
+
   #renderNoPoints = () => {
     this.#noPointComponent = new NoPointsView(this.#filterType);
     render(this.#noPointComponent, this.#eventsContainer);
@@ -146,6 +158,7 @@ export default class MainPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
@@ -157,6 +170,14 @@ export default class MainPresenter {
   };
 
   #renderPage = () => {
+    render(this.#listPointsComponent, this.#eventsContainer);
+    this.#renderSort();
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.points;
 
     if (points.length === 0) {
@@ -164,8 +185,6 @@ export default class MainPresenter {
       return;
     }
 
-    this.#renderSort();
-    render(this.#listPointsComponent, this.#eventsContainer);
     this.#renderPoints(points);
   };
 
