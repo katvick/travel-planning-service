@@ -1,7 +1,6 @@
 import EditPointView from '../view/edit-point-view.js';
 import { render, remove, RenderPosition } from '../framework/render.js';
 import { UserAction, UpdateType } from '../const.js';
-import { nanoid } from 'nanoid';
 
 export default class NewPointPresenter {
   #listPointsContainer = null;
@@ -49,7 +48,6 @@ export default class NewPointPresenter {
   };
 
   #handlePointSubmit = (point) => {
-    point.id = nanoid();
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
