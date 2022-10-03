@@ -74,6 +74,24 @@ export default class PointPresenter {
     }
   };
 
+  setSaving = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#editPointComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
+  setDeleting = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#editPointComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
   #replaceItemToForm = () => {
     replace(this.#editPointComponent, this.#pointComponent);
     this.#changeMode();

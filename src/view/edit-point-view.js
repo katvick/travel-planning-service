@@ -59,7 +59,7 @@ const createPicturesTemplate = (pictures) => {
   return picturesTemplate.join('');
 };
 
-const createEditPointTemplate = (point, listOffers, listDestinations, isDisabled) => {
+const createEditPointTemplate = (point, listOffers, listDestinations) => {
   const { basePrice, dateFrom, dateTo, destination, id, type, isDisabled, isSaving, isDeleting} = point;
   const checkPoint = point.id !== null;
 
@@ -341,12 +341,13 @@ export default class EditPointView extends AbstractStatefulView {
     isDeleting: false,
   });
 
-  static parseStateToPoint = (state) => (
-    const point = {...state});
+  static parseStateToPoint = (state) => {
+    const point = {...state};
 
     delete point.isDisabled;
     delete point.isSaving;
     delete point.isDeleting;
 
     return point;
+  };
 }
