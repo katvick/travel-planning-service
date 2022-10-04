@@ -2,6 +2,7 @@ import SortingView from '../view/sorting-view.js';
 import ListPointsView from '../view/list-points-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import LoadingView from '../view/loading-view.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './point-new-presenter.js';
@@ -10,6 +11,11 @@ import { render, remove } from '../framework/render.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { filter } from '../utils/filter.js';
 import { sortPointDay, sortPointPrice } from '../utils/point.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class MainPresenter {
   #listPointsComponent = new ListPointsView();
@@ -28,6 +34,7 @@ export default class MainPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
   constructor(eventsContainer, pointsModel, offersModel, destinationsModel, filterModel) {
     this.#eventsContainer = eventsContainer;
@@ -81,6 +88,8 @@ export default class MainPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.ADD_POINT:
         this.#newPointPresenter.setSaving();
@@ -106,6 +115,8 @@ export default class MainPresenter {
           this.#pointPresenter.get(update.id).setAborting();
         }
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
