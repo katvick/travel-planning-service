@@ -289,6 +289,12 @@ export default class EditPointView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
+
+    if (this._state.dateFrom > this._state.dateTo) {
+      alert('Дата окончания должна быть позже даты начала!')
+      return;
+    }
+
     this._callback.formSubmit(EditPointView.parseStateToPoint(this._state));
   };
 
