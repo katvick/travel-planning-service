@@ -7,7 +7,7 @@ import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './point-new-presenter.js';
 
-import { render, remove } from '../framework/render.js';
+import { render, remove, RenderPosition } from '../framework/render.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { filter } from '../utils/filter.js';
 import { sortPointDay, sortPointPrice } from '../utils/point.js';
@@ -154,7 +154,7 @@ export default class MainPresenter {
     this.#sortComponent = new SortingView(this.#currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
 
-    render(this.#sortComponent, this.#eventsContainer);
+    render(this.#sortComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   };
 
   #renderPoint = (point) => {
@@ -196,9 +196,6 @@ export default class MainPresenter {
   };
 
   #renderPage = () => {
-    render(this.#listPointsComponent, this.#eventsContainer);
-    this.#renderSort();
-
     if (this.#isLoading) {
       this.#renderLoading();
       return;
@@ -211,6 +208,8 @@ export default class MainPresenter {
       return;
     }
 
+    render(this.#listPointsComponent, this.#eventsContainer);
+    this.#renderSort();
     this.#renderPoints(points);
   };
 
