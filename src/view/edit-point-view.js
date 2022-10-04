@@ -291,7 +291,6 @@ export default class EditPointView extends AbstractStatefulView {
     evt.preventDefault();
 
     if (this._state.dateFrom > this._state.dateTo) {
-      alert('Дата окончания должна быть позже даты начала!')
       return;
     }
 
