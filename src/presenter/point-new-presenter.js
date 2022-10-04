@@ -54,6 +54,18 @@ export default class NewPointPresenter {
     });
   };
 
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#editPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#editPointComponent.shake(resetFormState);
+  };
+
   #handlePointSubmit = (point) => {
     this.#changeData(
       UserAction.ADD_POINT,
