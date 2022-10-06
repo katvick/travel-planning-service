@@ -1,9 +1,11 @@
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../const.js';
+import { isPointsFuture } from '../utils/point.js';
 
 export default class PointsModel extends Observable {
   #points = [];
   #pointsApiService = null;
+  #pointsFuture = false;
 
   constructor (pointsApiService) {
     super();
@@ -14,15 +16,19 @@ export default class PointsModel extends Observable {
     return this.#points;
   }
 
+  get pointsFuture() {
+    return this.#pointsFuture;
+  }
+
   init = async () => {
     try {
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
+      this._notify(UpdateType.INIT);
     } catch(err) {
-      this.#points = [];
+      this._notify(UpdateType.ERROR, err);
+      throw new Error(err.message);
     }
-
-    this._notify(UpdateType.INIT);
   };
 
   updatePoint = async (updateType, update) => {
@@ -85,6 +91,10 @@ export default class PointsModel extends Observable {
       dateFrom: point['date_from'],
       dateTo: point['date_to'],
     };
+
+    if (isPointsFuture(adaptedPoint.dateFrom)) {
+      this.#pointsFuture = true;
+    }
 
     delete adaptedPoint['base_price'];
     delete adaptedPoint['date_from'];

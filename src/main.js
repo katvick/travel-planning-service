@@ -6,7 +6,7 @@ import OffersModel from './model/offers-model.js';
 import FilterModel from './model/filter-model.js';
 import PointsApiService from './point-api-service.js';
 
-const AUTHORIZATION = 'Basic kjsdHd434bLXShn0';
+const AUTHORIZATION = 'Basic dfghnYG6438';
 const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
 
 import { render } from './framework/render.js';
@@ -38,10 +38,11 @@ const handleNewPointButtonClick = () => {
 
 filterPresenter.init();
 pagePresenter.init();
-offersModel.init();
-destinationsModel.init();
-pointsModel.init().finally(() => {
-  render(newPointButtonComponent, newPointButtonElement);
-  newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
-});
+
+Promise.all([offersModel.init(), destinationsModel.init()])
+  .then(() => pointsModel.init())
+  .then(() => {
+    render(newPointButtonComponent, newPointButtonElement);
+    newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+  });
 

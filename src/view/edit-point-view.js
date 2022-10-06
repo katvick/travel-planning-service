@@ -37,17 +37,16 @@ const createCityListTemplate = (destinations, isDisabled) => {
 
 const createOffersTemplate = (offers, offersSelected, isDisabled) => {
   const offersTemplate = offers.offers.map(({ id, title, price }, index) => `
-    <div class="event__offer-selector" ${isDisabled ? 'disabled' : ''}>
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index + 1}" type="checkbox" name="event-offer-${title}" 
+    <div class='event__offer-selector' ${isDisabled ? 'disabled' : ''}>
+      <input class='event__offer-checkbox  visually-hidden' id='event-offer-${index + 1}' type='checkbox' name='event-offer-${title}' 
       ${offersSelected.find((item) => item.id === id) ? 'checked' : ''}>
-      <label class="event__offer-label" for="event-offer-${index + 1}'>
-        <span class="event__offer-title">${title}</span>
+      <label class='event__offer-label' for='event-offer-${index + 1}'>
+        <span class='event__offer-title'>${title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${price}</span>
+        <span class='event__offer-price'>${price}</span>
       </label>
     </div>
   `);
-
   return offersTemplate.join('');
 };
 

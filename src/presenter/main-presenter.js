@@ -2,6 +2,7 @@ import SortingView from '../view/sorting-view.js';
 import ListPointsView from '../view/list-points-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import LoadingView from '../view/loading-view.js';
+import ErrorView from '../view/error-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 import PointPresenter from './point-presenter.js';
@@ -23,6 +24,7 @@ export default class MainPresenter {
   #noPointComponent = null;
   #eventsContainer = null;
   #loadingComponent = new LoadingView();
+  #errorComponent = new ErrorView();
 
   #filterModel = null;
   #pointsModel = null;
@@ -34,6 +36,7 @@ export default class MainPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #isError = false;
   #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
   constructor(eventsContainer, pointsModel, offersModel, destinationsModel, filterModel) {
@@ -137,6 +140,12 @@ export default class MainPresenter {
         remove(this.#loadingComponent);
         this.#renderPage();
         break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        this.#isError = true;
+        remove(this.#loadingComponent);
+        this.#renderPage();
+        break;
     }
   };
 
@@ -173,6 +182,10 @@ export default class MainPresenter {
     render(this.#loadingComponent, this.#eventsContainer);
   };
 
+  #renderError = () => {
+    render(this.#errorComponent, this.#eventsContainer);
+  };
+
   #renderNoPoints = () => {
     this.#noPointComponent = new NoPointsView(this.#filterType);
     render(this.#noPointComponent, this.#eventsContainer);
@@ -185,6 +198,7 @@ export default class MainPresenter {
 
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
+    remove(this.#errorComponent);
 
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
@@ -196,6 +210,11 @@ export default class MainPresenter {
   };
 
   #renderPage = () => {
+    if (this.#isError) {
+      this.#renderError();
+      return;
+    }
+
     if (this.#isLoading) {
       this.#renderLoading();
       return;
